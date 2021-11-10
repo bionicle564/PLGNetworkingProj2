@@ -1,10 +1,5 @@
 #define WIN32_LEAN_AND_MEAN			// Strip rarely used calls
 
-//server_main.cpp
-//Gian Tullo, 0886424 / Lucas Magalhaes /Philip Tomaszewski
-//23/10/21
-//A chatroom server, allowing for the sending and receiving of messages
-
 #include <Windows.h>
 #include <WinSock2.h>
 #include <WS2tcpip.h>
@@ -12,6 +7,7 @@
 #include <stdio.h>
 #include <string>
 #include <iostream>
+
 #include <Buffer.h>
 #include <ProtocolHelper.h>
 
@@ -19,14 +15,11 @@
 #pragma comment (lib, "Ws2_32.lib")
 
 #define DEFAULT_BUFLEN 512
-#define DEFAULT_PORT "27015"
-#define DEFAULT_AUTH_PORT "27016"
-#define SERVER "127.0.0.1"	
+#define DEFAULT_PORT "27016" //new port number for this server
 
 Buffer outgoing(DEFAULT_BUFLEN);
 Buffer ingoing(DEFAULT_BUFLEN);
 
-// Client structure
 struct ClientInfo
 {
 	SOCKET socket;
@@ -61,15 +54,7 @@ void RemoveClient(int index)
 int main(int argc, char** argv)
 {
 	WSADATA wsaData;
-	SOCKET connectSocket = INVALID_SOCKET;
-
-	struct addrinfo* infoResult = NULL;
-	struct addrinfo* ptr = NULL;
-	u_long mode = 1;
-
 	int iResult;
-	int result;
-
 
 	// Initialize Winsock
 	iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
@@ -110,67 +95,6 @@ int main(int argc, char** argv)
 	{
 		printf("getaddrinfo() is good!\n");
 	}
-
-	result = getaddrinfo(SERVER, DEFAULT_AUTH_PORT, &hints, &infoResult);
-	if (result != 0)
-	{
-		printf("getaddrinfo failed with error: %d\n", result);
-		WSACleanup();
-		return 1;
-	}
-
-	//=================
-
-	bool isConnected = false;
-	// Step #3 Attempt to connect to an address until one succeeds
-	for (ptr = infoResult; ptr != NULL; ptr = ptr->ai_next)
-	{
-		// Create a SOCKET for connecting to server
-		connectSocket = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
-
-		if (connectSocket == INVALID_SOCKET)
-		{
-			printf("socket failed with error: %ld\n", WSAGetLastError());
-			WSACleanup();
-			return 1;
-		}
-
-
-		// Connect to server.
-		result = connect(connectSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
-		if (result == SOCKET_ERROR)
-		{
-			closesocket(connectSocket);
-			connectSocket = INVALID_SOCKET;
-			continue;
-		}
-
-		result = ioctlsocket(connectSocket, FIONBIO, &mode);
-		if (result != NO_ERROR)
-		{
-			printf("ioctlsocket failed with error: %ld\n", result);
-
-		}
-		isConnected = true;
-		break;
-	}
-
-	freeaddrinfo(infoResult);
-
-	if (connectSocket == INVALID_SOCKET)
-	{
-		printf("Unable to connect to server!\n");
-		WSACleanup();
-		return 1;
-	}
-
-	result = send(connectSocket, "hi there", 9, 0);
-
-	//===========================
-
-
-
-
 
 	// Create a SOCKET for connecting to the server
 	listenSocket = socket(
@@ -243,7 +167,7 @@ int main(int argc, char** argv)
 
 	FD_SET ReadSet;
 	int total;
-	
+
 	DWORD RecvBytes;
 	DWORD SentBytes;
 
@@ -337,7 +261,8 @@ int main(int argc, char** argv)
 
 				std::string received = "";
 
-				for (DWORD i = 0; i < RecvBytes; i++) {
+				for (DWORD i = 0; i < RecvBytes; i++)
+				{
 					received.push_back(client->dataBuf.buf[i]);
 				}
 
@@ -360,7 +285,7 @@ int main(int argc, char** argv)
 					outgoing = ProtocolMethods::MakeProtocol(RECV_MESSAGE, "Server", data.room, data.message);
 				}
 
-				
+
 				std::cout << "RECVd: " << received << std::endl;
 
 				if (iResult == SOCKET_ERROR)
@@ -398,7 +323,7 @@ int main(int argc, char** argv)
 						{
 							iResult = WSASend(
 								ClientArray[i]->socket,
-								&(buf), 
+								&(buf),
 								1,
 								&SentBytes,
 								Flags,
