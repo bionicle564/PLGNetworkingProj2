@@ -364,13 +364,17 @@ int main(int argc, char** argv)
 					//send data to auth server with g-protocols
 					// for now, just reply saying they logged in
 					//send(connectSocket, "hi there", 9, 0);
+
+					//data: username	-> the name they will use to sign in
+					//		room		-> the password they will use 
+
+
+					//the return message should have 'yes' for the room if logged in sucessfully
 					outgoing = ProtocolMethods::MakeProtocol(LOGIN_USER, "Server", "yes", "Logged in succesfull");
 				}
 				else if (data.type == REGISTER_USER)
 				{
-					//send data to auth server with g-protocols
-					// for now, just reply saying they logged in
-					//send(connectSocket, "hi there", 9, 0);
+					//see comments above
 					outgoing = ProtocolMethods::MakeProtocol(LOGIN_USER, "Server", "yes", "Logged in succesfull");
 				}
 
