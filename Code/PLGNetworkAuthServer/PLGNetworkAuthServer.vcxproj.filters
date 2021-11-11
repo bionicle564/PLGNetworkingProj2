@@ -18,5 +18,13 @@
     <ClCompile Include="auth_server_main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DBHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DBHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
