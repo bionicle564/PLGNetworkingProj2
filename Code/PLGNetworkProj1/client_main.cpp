@@ -309,6 +309,35 @@ int main(int argc, char **argv)
 						//just for now, only do this when we actully get confirmation from the server about logging in
 						loggedIn = true;
 					}
+					else if (command == "/registar" || command == "/reg" && !loggedIn)
+					{
+						std::string name;
+						std::string password;
+
+						std::cout << "Username: ";
+						std::cin >> name;
+
+						std::wcout << "Password: ";
+						std::cin >> password;
+
+						outgoing = ProtocolMethods::MakeProtocol(REGISTER_USER, name, password, "");
+						char* leavePayload = outgoing.PayloadToString();
+						//send it
+						result = send(connectSocket, leavePayload, outgoing.readUInt32BE(0), 0);
+						if (result == SOCKET_ERROR)
+						{
+							printf("send failed with error: %d\n", WSAGetLastError());
+							closesocket(connectSocket);
+							WSACleanup();
+							return 1;
+						}
+
+						//clean up
+						delete[] leavePayload;
+
+						//just for now, only do this when we actully get confirmation from the server about logging in
+						loggedIn = true;
+					}
 				}
 				
 				else{ invalidCommand = true; }
@@ -397,6 +426,7 @@ int main(int argc, char **argv)
 					std::cout << "/join [room]: joins the room" << std::endl;
 					std::cout << "/message [room]: sends a message to the room" << std::endl;
 					std::cout << "/leave [room]: leaves the room" << std::endl;
+					std::cout << "/login: start the login process" << std::endl;
 					//make sure this isn't always on
 					//helpRequested = false;
 				}

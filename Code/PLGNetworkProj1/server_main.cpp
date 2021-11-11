@@ -366,6 +366,13 @@ int main(int argc, char** argv)
 					//send(connectSocket, "hi there", 9, 0);
 					outgoing = ProtocolMethods::MakeProtocol(LOGIN_USER, "Server", "yes", "Logged in succesfull");
 				}
+				else if (data.type == REGISTER_USER)
+				{
+					//send data to auth server with g-protocols
+					// for now, just reply saying they logged in
+					//send(connectSocket, "hi there", 9, 0);
+					outgoing = ProtocolMethods::MakeProtocol(LOGIN_USER, "Server", "yes", "Logged in succesfull");
+				}
 
 				
 				std::cout << "RECVd: " << received << std::endl;
