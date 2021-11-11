@@ -270,20 +270,7 @@ int main(int argc, char** argv)
 
 				sProtocolData data = ProtocolMethods::ParseBuffer(ingoing);
 
-				//setup buffer for messages to the clients
-				if (data.type == JOIN_ROOM)
-				{
-					outgoing = ProtocolMethods::MakeProtocol(RECV_MESSAGE, "Server", data.room, data.message);
-
-				}
-				else if (data.type == SEND_MESSAGE)
-				{
-					outgoing = ProtocolMethods::MakeProtocol(RECV_MESSAGE, data.userName, data.room, data.message);
-				}
-				else if (data.type == LEAVE_ROOM)
-				{
-					outgoing = ProtocolMethods::MakeProtocol(RECV_MESSAGE, "Server", data.room, data.message);
-				}
+				//=====================put parsing ptrotobuffs here=================
 
 
 				std::cout << "RECVd: " << received << std::endl;

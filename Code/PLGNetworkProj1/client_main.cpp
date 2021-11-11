@@ -121,38 +121,42 @@ int main(int argc, char **argv)
 	//this is blocking, but that okay since we're no in a room yet
 	std::string username = "";
 	std::string roomname = "";
-	std::cout << "Enter your username: ";
-	std::cin >> username;
-	std::cout << "Enter the name of the room you want to join: ";
-	std::cin >> roomname;
+	//std::cout << "Enter your username: ";
+	//std::cin >> username;
+	//std::cout << "Enter the name of the room you want to join: ";
+	//std::cin >> roomname;
 
 	//assemble the protocol
-	outgoing = ProtocolMethods::MakeProtocol(JOIN_ROOM, username, roomname, "");//this has no inherent message
-	sProtocolData data = ProtocolMethods::ParseBuffer(outgoing);
+	//outgoing = ProtocolMethods::MakeProtocol(JOIN_ROOM, username, roomname, "");//this has no inherent message
+	//sProtocolData data = ProtocolMethods::ParseBuffer(outgoing);
 
 	//change it to a format we can transport
-	char* payload = outgoing.PayloadToString();
+	//char* payload = outgoing.PayloadToString();
 	//send it
-	result = send(connectSocket, payload, outgoing.readUInt32BE(0), 0);
-	if (result == SOCKET_ERROR)
-	{
-		printf("send failed with error: %d\n", WSAGetLastError());
-		closesocket(connectSocket);
-		WSACleanup();
-		return 1;
-	}
+	//result = send(connectSocket, payload, outgoing.readUInt32BE(0), 0);
+	//if (result == SOCKET_ERROR)
+	//{
+	//	printf("send failed with error: %d\n", WSAGetLastError());
+	//	closesocket(connectSocket);
+	//	WSACleanup();
+	//	return 1;
+	//}
 
-	rooms.push_back(roomname);
+	//rooms.push_back(roomname);
 
 	//clean up
-	delete[] payload;
-	printf("Bytes Sent: %ld\n", result);
+	//delete[] payload;
+	//printf("Bytes Sent: %ld\n", result);
 	
 	//start Client loop
-	bool updateLog = false;
+	bool updateLog = true;
 	bool quit = false;
 	bool helpRequested = false;
 	bool invalidCommand = false;
+
+	bool loggedIn = false;
+	bool loginMessage = true;
+
 	while (!quit) {
 
 		//get keyboard input
@@ -182,7 +186,7 @@ int main(int argc, char **argv)
 					if (command == "/help" || command == "/h") {
 						helpRequested = true;
 						updateLog;
-					}else if (command == "/join" || command == "/j")
+					}else if (command == "/join" || command == "/j" && loggedIn)
 					{
 						if (std::count(rooms.begin(), rooms.end(), message))
 						{
@@ -213,7 +217,7 @@ int main(int argc, char **argv)
 							printf("Bytes Sent: %ld\n", result);
 						}
 					}
-					else if (command == "/message" || command == "/m")
+					else if (command == "/message" || command == "/m" && loggedIn)
 					{
 						pos = message.find(" ");
 						std::string room = message.substr(0, pos);
@@ -247,7 +251,7 @@ int main(int argc, char **argv)
 							printf("Bytes Sent: %ld\n", result);
 						}
 					}
-					else if (command == "/leave" || command == "/l")
+					else if (command == "/leave" || command == "/l" && loggedIn)
 					{
 						if (std::count(rooms.begin(), rooms.end(), message) == 0)
 						{
@@ -276,7 +280,37 @@ int main(int argc, char **argv)
 							rooms.erase(std::find(rooms.begin(), rooms.end(), message));
 						}
 					}
+					else if (command == "/login" || command == "/log" && !loggedIn)
+					{
+						std::string name;
+						std::string password;
+
+						std::cout << "Username: ";
+						std::cin >> name;
+
+						std::wcout << "Password: ";
+						std::cin >> password;
+
+						outgoing = ProtocolMethods::MakeProtocol(LOGIN_USER, name, password, "");
+						char* leavePayload = outgoing.PayloadToString();
+						//send it
+						result = send(connectSocket, leavePayload, outgoing.readUInt32BE(0), 0);
+						if (result == SOCKET_ERROR)
+						{
+							printf("send failed with error: %d\n", WSAGetLastError());
+							closesocket(connectSocket);
+							WSACleanup();
+							return 1;
+						}
+
+						//clean up
+						delete[] leavePayload;
+
+						//just for now, only do this when we actully get confirmation from the server about logging in
+						loggedIn = true;
+					}
 				}
+				
 				else{ invalidCommand = true; }
 				message = "";
 				updateLog = true;
@@ -305,14 +339,29 @@ int main(int argc, char **argv)
 				//Parse the data in the buffer
 
 				sProtocolData data = ProtocolMethods::ParseBuffer(incoming);
-
-				//if it comes from a room that we're in, add it to the chat log
-				system("cls"); //supposedly this isn't a safe thing to do, but I'm pretty sure LG showed it in class
-				for (int i = 0; i < rooms.size(); i++) {
-					if (rooms[i] == data.room) { 
-						chatlog.push_back("<" + data.room + "> " + data.userName + ":\t" + data.message);
+				if (data.type == LOGIN_USER)
+				{
+					if (data.room == "yes")
+					{
+						loggedIn = true;
 					}
+					chatlog.push_back("<Authentication> " + data.userName + ":\t" + data.message);
 					updateLog = true;
+				}
+				else
+				{
+
+
+					//if it comes from a room that we're in, add it to the chat log
+					system("cls"); //supposedly this isn't a safe thing to do, but I'm pretty sure LG showed it in class
+					for (int i = 0; i < rooms.size(); i++)
+					{
+						if (rooms[i] == data.room)
+						{
+							chatlog.push_back("<" + data.room + "> " + data.userName + ":\t" + data.message);
+						}
+						updateLog = true;
+					}
 				}
 			}
 			else if (result == 0)
@@ -354,8 +403,14 @@ int main(int argc, char **argv)
 				else {
 					std::cout << "type /help for a list of commands" << std::endl;
 				}
+
+				if (loginMessage)
+				{
+					std::cout << "Please either log in or regester as a new user" << std::endl;
+				}
+
 				//user input
-				std::cout << "message: ";
+				std::cout << ">> ";
 				std::cout << message << std::endl;
 				updateLog = false;
 			}

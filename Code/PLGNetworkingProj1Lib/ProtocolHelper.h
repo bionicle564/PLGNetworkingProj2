@@ -15,7 +15,9 @@ enum ProtocolType
 	JOIN_ROOM = 1,
 	LEAVE_ROOM,
 	SEND_MESSAGE,
-	RECV_MESSAGE
+	RECV_MESSAGE,
+	REGISTAR_USER,
+	LOGIN_USER
 };
 
 //structure of data from a protocol

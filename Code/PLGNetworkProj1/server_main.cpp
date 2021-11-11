@@ -164,7 +164,7 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
-	result = send(connectSocket, "hi there", 9, 0);
+	result = send(connectSocket, "hi there", 9, 0); //just to see if it connects
 
 	//===========================
 
@@ -358,6 +358,13 @@ int main(int argc, char** argv)
 				else if (data.type == LEAVE_ROOM)
 				{
 					outgoing = ProtocolMethods::MakeProtocol(RECV_MESSAGE, "Server", data.room, data.message);
+				}
+				else if (data.type == LOGIN_USER)
+				{
+					//send data to auth server with g-protocols
+					// for now, just reply saying they logged in
+					//send(connectSocket, "hi there", 9, 0);
+					outgoing = ProtocolMethods::MakeProtocol(LOGIN_USER, "Server", "yes", "Logged in succesfull");
 				}
 
 				
