@@ -20,7 +20,9 @@ class DBHelper
 {
 public:
 	DBHelper(void);
+	~DBHelper();
 
+	//Hostname "localhost:3306", username "root", password "password"
 	void Connect(const string& hostname, const string& username, const string& password);
 	bool IsConnected(void);
 
@@ -29,6 +31,7 @@ public:
 	// INSERT = sql::Statement::execute()
 
 	CreateAccountWebResult CreateAccount(const string& email, const string& password);
+	bool LoginUser(const string& email, const string& password);
 
 private:
 	void GeneratePreparedStatements(void);
@@ -38,4 +41,6 @@ private:
 	ResultSet* m_ResultSet;
 	bool m_IsConnected;
 	bool m_IsConnecting;
+
+	std::string GetTimeInDateTimeFormat();
 };

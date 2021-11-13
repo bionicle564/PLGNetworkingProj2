@@ -1,7 +1,15 @@
 #include "DBHelper.h"
 
+#include <time.h>
+
+//example ones
 sql::PreparedStatement* g_GetEmails;
-sql::PreparedStatement* g_InsertWebAuth;
+//sql::PreparedStatement* g_InsertWebAuth;
+
+//the ones we'll actually use
+sql::PreparedStatement* createUser;
+sql::PreparedStatement* createAuth;
+sql::PreparedStatement* updateLoginTime;
 
 DBHelper::DBHelper(void)
 	: m_IsConnected(false)
@@ -10,6 +18,16 @@ DBHelper::DBHelper(void)
 	, m_Driver(0)
 	, m_ResultSet(0)
 {
+}
+
+DBHelper::~DBHelper() {
+	delete g_GetEmails;
+	delete createUser;
+	delete createAuth;
+	delete updateLoginTime;
+	delete m_Driver;
+	delete m_Connection;
+	delete m_ResultSet;
 }
 
 bool DBHelper::IsConnected(void)
@@ -36,13 +54,54 @@ CreateAccountWebResult DBHelper::CreateAccount(const string& email, const string
 		return CreateAccountWebResult::ACCOUNT_ALREADY_EXISTS;
 	}
 
+	//This is for adding the user
+	//YYYY-MM-DD hh:mm:ss <-Format for Timestamp and DateTime	
+	
+	std::string nowAsDateTime = GetTimeInDateTimeFormat();
+
+	try {
+		createUser->setString(1, nowAsDateTime);
+		int result = createUser->executeUpdate();
+	}
+	catch (SQLException e)
+	{
+		printf("Failed to insert account into web_auth!\n");
+		return CreateAccountWebResult::INTERNAL_SERVER_ERROR;
+	}
+
+	//this is for adding the authentication data
+	sql::Statement* stmt = m_Connection->createStatement();
 	try
 	{
-		g_InsertWebAuth->setString(1, email);
-		g_InsertWebAuth->setString(2, password);
-		g_InsertWebAuth->setString(3, "Salt");
-		g_InsertWebAuth->setInt(4, 7);
-		int result = g_InsertWebAuth->executeUpdate();
+		m_ResultSet = stmt->executeQuery("SELECT LAST_INSERT_ID();");
+	}
+	catch (SQLException e)
+	{
+		printf("Failed to retrieve last insert id!\n");
+		return CreateAccountWebResult::INTERNAL_SERVER_ERROR;
+	}
+	int lastId = 0;
+	if (m_ResultSet->next())
+	{
+		lastId = m_ResultSet->getInt(1);
+	}
+	delete stmt;
+
+
+	try
+	{
+		//g_InsertWebAuth->setString(1, email);
+		//g_InsertWebAuth->setString(2, password);
+		//g_InsertWebAuth->setString(3, "Salt");
+		//g_InsertWebAuth->setInt(4, 7);
+		//int result = g_InsertWebAuth->executeUpdate();
+
+		createAuth->setString(1, email);
+		createAuth->setString(2, "SALT"); //!CHANGE THIS LATER WITH ACTUAL THING
+		createAuth->setString(3, password);
+		createAuth->setInt(4, lastId);
+		int result = createAuth->executeUpdate();
+
 	}
 	catch (SQLException e)
 	{
@@ -65,17 +124,71 @@ CreateAccountWebResult DBHelper::CreateAccount(const string& email, const string
 	{
 		lastId = m_ResultSet->getInt(1);
 	}
+	delete stmt;
 
 	printf("Successfully retrieved web_auth data!\n");
 	return CreateAccountWebResult::SUCCESS;
 }
 
+bool DBHelper::LoginUser(const string& email, const string& password) {
+
+	g_GetEmails->setString(1, email);
+	try
+	{
+		m_ResultSet = g_GetEmails->executeQuery();
+	}
+	catch (SQLException e)
+	{
+		printf("Failed to retrieved web_auth data!\n");
+		return false;
+	}
+
+	if (m_ResultSet->rowsCount() == 0)
+	{
+		printf("No such Account exists!\n");
+		return false;
+	}
+
+	std::string retrievedPassword = m_ResultSet->getString("hash_password");
+	//!SOMETHING MIGHT NEED TO BE DONE HERE?
+	if (retrievedPassword != password) {
+		printf("PASSWORD MISMATCH!\n");
+		return false;
+	}
+
+	std::string nowAsDateTime = GetTimeInDateTimeFormat();
+
+	//update the login time
+	try {
+		updateLoginTime->setString(1, nowAsDateTime);
+		updateLoginTime->setInt(2, m_ResultSet->getInt(1));
+		int result = updateLoginTime->executeUpdate();
+	}catch (SQLException e)
+	{
+		printf("Failed to update login data!\n");
+		return false;
+	}
+
+	return true;
+}
+
 void DBHelper::GeneratePreparedStatements(void)
 {
 	g_GetEmails = m_Connection->prepareStatement(
-		"SELECT email FROM `web_auth` WHERE email = ?;");
-	g_InsertWebAuth = m_Connection->prepareStatement(
-		"INSERT INTO web_auth(email, hashed_password, salt, userId) VALUES (?, ?, ?, ?);");
+	  "SELECT * FROM web_auth WHERE email = ?;"
+	);
+	//g_InsertWebAuth = m_Connection->prepareStatement(
+	//	"INSERT INTO web_auth(email, hashed_password, salt, userId) VALUES (?, ?, ?, ?);");
+
+	createUser = m_Connection->prepareStatement(
+		"INSERT INTO users (creationTime) VALUES (?);"
+	);
+	createAuth = m_Connection->prepareStatement(
+		"INSERT INTO web_auth (email, salt, hash_password, user_id) VALUES(? , ? , ? , ?); "
+	);
+	updateLoginTime = m_Connection->prepareStatement(
+		"UPDATE users SET last_login = ? WHERE id = ?;"
+	);
 }
 
 void DBHelper::Connect(const string& hostname, const string& username, const string& password)
@@ -88,7 +201,7 @@ void DBHelper::Connect(const string& hostname, const string& username, const str
 	{
 		m_Driver = mysql::get_driver_instance();
 		m_Connection = m_Driver->connect(hostname, username, password);
-		m_Connection->setSchema("authenticationservice");
+		m_Connection->setSchema("networkauthdatabase"); // I think this is correct
 	}
 	catch (SQLException e)
 	{
@@ -103,3 +216,30 @@ void DBHelper::Connect(const string& hostname, const string& username, const str
 
 	printf("Successfully connected to database!\n");
 }
+
+std::string DBHelper::GetTimeInDateTimeFormat() {
+	time_t rawTime;
+	struct tm* timeInfo;
+
+	time(&rawTime);
+	timeInfo = localtime(&rawTime);
+
+
+	std::string nowAsDateTime = "";
+
+	nowAsDateTime += timeInfo->tm_year;
+	nowAsDateTime += "-";
+	nowAsDateTime += timeInfo->tm_mon;
+	nowAsDateTime += "-";
+	nowAsDateTime += timeInfo->tm_mday;
+	nowAsDateTime += " ";
+	nowAsDateTime += timeInfo->tm_hour;
+	nowAsDateTime += ":";
+	nowAsDateTime += timeInfo->tm_min;
+	nowAsDateTime += ":";
+	nowAsDateTime += timeInfo->tm_sec;
+
+	delete timeInfo;
+
+	return nowAsDateTime;
+};
