@@ -191,7 +191,7 @@ int main(int argc, char** argv)
 
 		// Call our select function to find the sockets that
 		// require our attention
-		printf("Waiting for select()...\n");
+		//printf("Waiting for select()...\n");
 		total = select(0, &ReadSet, NULL, NULL, &tv);
 		if (total == SOCKET_ERROR)
 		{
@@ -200,7 +200,7 @@ int main(int argc, char** argv)
 		}
 		else
 		{
-			printf("select() is successful!\n");
+			//printf("select() is successful!\n");
 		}
 
 		// #4 Check for arriving connections on the listening socket
@@ -272,7 +272,7 @@ int main(int argc, char** argv)
 				sProtocolData data = ProtocolMethods::ParseBuffer(ingoing);
 
 				//=====================put parsing ptrotobuffs here=================
-				if (data.type == G_AUTHENTICATE)
+				if (data.type == G_CREATE_ACCOUNT)
 				{
 					tutorial::CreateAccountWeb created;
 					if (!created.ParseFromString(data.message))
@@ -285,10 +285,29 @@ int main(int argc, char** argv)
 						std::cout << created.email() << std::endl;
 						std::cout << created.plaintextpassword() << std::endl;
 					}
+
+					// sql call
+				}
+				else if (data.type == G_AUTHENTICATE)
+				{
+					tutorial::AuthenticateWeb login;
+
+					if (!login.ParseFromString(data.message))
+					{
+						std::cout << "Parsing failed" << std::endl;
+					}
+					else
+					{
+						std::cout << login.requestid() << std::endl;
+						std::cout << login.email() << std::endl;
+						std::cout << login.plaintextpassword() << std::endl;
+					}
+
+					// sql call
 				}
 
 
-				std::cout << "RECVd: " << received << std::endl;
+				//std::cout << "RECVd: " << received << std::endl;
 
 				if (iResult == SOCKET_ERROR)
 				{

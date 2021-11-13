@@ -394,7 +394,50 @@ int main(int argc, char** argv)
 
 
 					//the return message should have 'yes' for the room if logged in sucessfully
-					outgoing = ProtocolMethods::MakeProtocol(LOGIN_USER, "Server", "yes", "Logged in succesfull");
+					
+					tutorial::AuthenticateWeb userLogin;
+
+					userLogin.set_requestid(1);
+					userLogin.set_email(data.userName);
+					userLogin.set_plaintextpassword(data.room);
+
+					std::string serialized;
+					userLogin.SerializeToString(&serialized);
+
+					authentication = ProtocolMethods::MakeProtocol(G_AUTHENTICATE, "", "", serialized);
+
+					char* payload = authentication.PayloadToString();
+					WSABUF buf;
+					buf.buf = payload;
+					buf.len = authentication.readUInt32BE(0);
+
+					iResult = WSASend(
+						connectSocket,
+						&(buf),
+						1,
+						&SentBytes,
+						Flags,
+						NULL,
+						NULL
+					);
+
+					// Example using send instead of WSASend...
+					//int iSendResult = send(client->socket, client->dataBuf.buf, iResult, 0);
+
+					if (SentBytes == SOCKET_ERROR)
+					{
+						printf("send error %d\n", WSAGetLastError());
+					}
+					else if (SentBytes == 0)
+					{
+						printf("Send result is 0\n");
+					}
+					else
+					{
+						printf("Successfully sent %d bytes!\n", SentBytes);
+					}
+
+					delete[] payload; //clean the payload
 				}
 				else if (data.type == REGISTER_USER)
 				{
@@ -409,7 +452,7 @@ int main(int argc, char** argv)
 					std::string serialized;
 					newAccount.SerializeToString(&serialized);
 
-					authentication = ProtocolMethods::MakeProtocol(G_AUTHENTICATE, "", "", serialized);
+					authentication = ProtocolMethods::MakeProtocol(G_CREATE_ACCOUNT, "", "", serialized);
 
 					char* payload = authentication.PayloadToString();
 					WSABUF buf;

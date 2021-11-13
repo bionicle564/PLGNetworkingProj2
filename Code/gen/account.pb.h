@@ -819,28 +819,10 @@ class AuthenticateWeb final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kRequestIdFieldNumber = 1,
     kEmailFieldNumber = 2,
     kPlaintextPasswordFieldNumber = 3,
+    kRequestIdFieldNumber = 1,
   };
-  // required string requestId = 1;
-  bool has_requestid() const;
-  private:
-  bool _internal_has_requestid() const;
-  public:
-  void clear_requestid();
-  const std::string& requestid() const;
-  template <typename ArgT0 = const std::string&, typename... ArgT>
-  void set_requestid(ArgT0&& arg0, ArgT... args);
-  std::string* mutable_requestid();
-  PROTOBUF_MUST_USE_RESULT std::string* release_requestid();
-  void set_allocated_requestid(std::string* requestid);
-  private:
-  const std::string& _internal_requestid() const;
-  inline PROTOBUF_ALWAYS_INLINE void _internal_set_requestid(const std::string& value);
-  std::string* _internal_mutable_requestid();
-  public:
-
   // required string email = 2;
   bool has_email() const;
   private:
@@ -877,6 +859,19 @@ class AuthenticateWeb final :
   std::string* _internal_mutable_plaintextpassword();
   public:
 
+  // required int32 requestId = 1;
+  bool has_requestid() const;
+  private:
+  bool _internal_has_requestid() const;
+  public:
+  void clear_requestid();
+  ::PROTOBUF_NAMESPACE_ID::int32 requestid() const;
+  void set_requestid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_requestid() const;
+  void _internal_set_requestid(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
   // @@protoc_insertion_point(class_scope:tutorial.AuthenticateWeb)
  private:
   class _Internal;
@@ -889,9 +884,9 @@ class AuthenticateWeb final :
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::internal::HasBits<1> _has_bits_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr requestid_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr email_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr plaintextpassword_;
+  ::PROTOBUF_NAMESPACE_ID::int32 requestid_;
   friend struct ::TableStruct_account_2eproto;
 };
 // -------------------------------------------------------------------
@@ -1523,67 +1518,37 @@ inline void CreateAccountWebFailure::set_requestid(::PROTOBUF_NAMESPACE_ID::int3
 
 // AuthenticateWeb
 
-// required string requestId = 1;
+// required int32 requestId = 1;
 inline bool AuthenticateWeb::_internal_has_requestid() const {
-  bool value = (_has_bits_[0] & 0x00000001u) != 0;
+  bool value = (_has_bits_[0] & 0x00000004u) != 0;
   return value;
 }
 inline bool AuthenticateWeb::has_requestid() const {
   return _internal_has_requestid();
 }
 inline void AuthenticateWeb::clear_requestid() {
-  requestid_.ClearToEmpty();
-  _has_bits_[0] &= ~0x00000001u;
+  requestid_ = 0;
+  _has_bits_[0] &= ~0x00000004u;
 }
-inline const std::string& AuthenticateWeb::requestid() const {
+inline ::PROTOBUF_NAMESPACE_ID::int32 AuthenticateWeb::_internal_requestid() const {
+  return requestid_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 AuthenticateWeb::requestid() const {
   // @@protoc_insertion_point(field_get:tutorial.AuthenticateWeb.requestId)
   return _internal_requestid();
 }
-template <typename ArgT0, typename... ArgT>
-inline PROTOBUF_ALWAYS_INLINE
-void AuthenticateWeb::set_requestid(ArgT0&& arg0, ArgT... args) {
- _has_bits_[0] |= 0x00000001u;
- requestid_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+inline void AuthenticateWeb::_internal_set_requestid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _has_bits_[0] |= 0x00000004u;
+  requestid_ = value;
+}
+inline void AuthenticateWeb::set_requestid(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_requestid(value);
   // @@protoc_insertion_point(field_set:tutorial.AuthenticateWeb.requestId)
-}
-inline std::string* AuthenticateWeb::mutable_requestid() {
-  std::string* _s = _internal_mutable_requestid();
-  // @@protoc_insertion_point(field_mutable:tutorial.AuthenticateWeb.requestId)
-  return _s;
-}
-inline const std::string& AuthenticateWeb::_internal_requestid() const {
-  return requestid_.Get();
-}
-inline void AuthenticateWeb::_internal_set_requestid(const std::string& value) {
-  _has_bits_[0] |= 0x00000001u;
-  requestid_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
-}
-inline std::string* AuthenticateWeb::_internal_mutable_requestid() {
-  _has_bits_[0] |= 0x00000001u;
-  return requestid_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
-}
-inline std::string* AuthenticateWeb::release_requestid() {
-  // @@protoc_insertion_point(field_release:tutorial.AuthenticateWeb.requestId)
-  if (!_internal_has_requestid()) {
-    return nullptr;
-  }
-  _has_bits_[0] &= ~0x00000001u;
-  return requestid_.ReleaseNonDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
-}
-inline void AuthenticateWeb::set_allocated_requestid(std::string* requestid) {
-  if (requestid != nullptr) {
-    _has_bits_[0] |= 0x00000001u;
-  } else {
-    _has_bits_[0] &= ~0x00000001u;
-  }
-  requestid_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), requestid,
-      GetArenaForAllocation());
-  // @@protoc_insertion_point(field_set_allocated:tutorial.AuthenticateWeb.requestId)
 }
 
 // required string email = 2;
 inline bool AuthenticateWeb::_internal_has_email() const {
-  bool value = (_has_bits_[0] & 0x00000002u) != 0;
+  bool value = (_has_bits_[0] & 0x00000001u) != 0;
   return value;
 }
 inline bool AuthenticateWeb::has_email() const {
@@ -1591,7 +1556,7 @@ inline bool AuthenticateWeb::has_email() const {
 }
 inline void AuthenticateWeb::clear_email() {
   email_.ClearToEmpty();
-  _has_bits_[0] &= ~0x00000002u;
+  _has_bits_[0] &= ~0x00000001u;
 }
 inline const std::string& AuthenticateWeb::email() const {
   // @@protoc_insertion_point(field_get:tutorial.AuthenticateWeb.email)
@@ -1600,7 +1565,7 @@ inline const std::string& AuthenticateWeb::email() const {
 template <typename ArgT0, typename... ArgT>
 inline PROTOBUF_ALWAYS_INLINE
 void AuthenticateWeb::set_email(ArgT0&& arg0, ArgT... args) {
- _has_bits_[0] |= 0x00000002u;
+ _has_bits_[0] |= 0x00000001u;
  email_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
   // @@protoc_insertion_point(field_set:tutorial.AuthenticateWeb.email)
 }
@@ -1613,11 +1578,11 @@ inline const std::string& AuthenticateWeb::_internal_email() const {
   return email_.Get();
 }
 inline void AuthenticateWeb::_internal_set_email(const std::string& value) {
-  _has_bits_[0] |= 0x00000002u;
+  _has_bits_[0] |= 0x00000001u;
   email_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
 }
 inline std::string* AuthenticateWeb::_internal_mutable_email() {
-  _has_bits_[0] |= 0x00000002u;
+  _has_bits_[0] |= 0x00000001u;
   return email_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
 }
 inline std::string* AuthenticateWeb::release_email() {
@@ -1625,14 +1590,14 @@ inline std::string* AuthenticateWeb::release_email() {
   if (!_internal_has_email()) {
     return nullptr;
   }
-  _has_bits_[0] &= ~0x00000002u;
+  _has_bits_[0] &= ~0x00000001u;
   return email_.ReleaseNonDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
 }
 inline void AuthenticateWeb::set_allocated_email(std::string* email) {
   if (email != nullptr) {
-    _has_bits_[0] |= 0x00000002u;
+    _has_bits_[0] |= 0x00000001u;
   } else {
-    _has_bits_[0] &= ~0x00000002u;
+    _has_bits_[0] &= ~0x00000001u;
   }
   email_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), email,
       GetArenaForAllocation());
@@ -1641,7 +1606,7 @@ inline void AuthenticateWeb::set_allocated_email(std::string* email) {
 
 // required string plaintextPassword = 3;
 inline bool AuthenticateWeb::_internal_has_plaintextpassword() const {
-  bool value = (_has_bits_[0] & 0x00000004u) != 0;
+  bool value = (_has_bits_[0] & 0x00000002u) != 0;
   return value;
 }
 inline bool AuthenticateWeb::has_plaintextpassword() const {
@@ -1649,7 +1614,7 @@ inline bool AuthenticateWeb::has_plaintextpassword() const {
 }
 inline void AuthenticateWeb::clear_plaintextpassword() {
   plaintextpassword_.ClearToEmpty();
-  _has_bits_[0] &= ~0x00000004u;
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline const std::string& AuthenticateWeb::plaintextpassword() const {
   // @@protoc_insertion_point(field_get:tutorial.AuthenticateWeb.plaintextPassword)
@@ -1658,7 +1623,7 @@ inline const std::string& AuthenticateWeb::plaintextpassword() const {
 template <typename ArgT0, typename... ArgT>
 inline PROTOBUF_ALWAYS_INLINE
 void AuthenticateWeb::set_plaintextpassword(ArgT0&& arg0, ArgT... args) {
- _has_bits_[0] |= 0x00000004u;
+ _has_bits_[0] |= 0x00000002u;
  plaintextpassword_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
   // @@protoc_insertion_point(field_set:tutorial.AuthenticateWeb.plaintextPassword)
 }
@@ -1671,11 +1636,11 @@ inline const std::string& AuthenticateWeb::_internal_plaintextpassword() const {
   return plaintextpassword_.Get();
 }
 inline void AuthenticateWeb::_internal_set_plaintextpassword(const std::string& value) {
-  _has_bits_[0] |= 0x00000004u;
+  _has_bits_[0] |= 0x00000002u;
   plaintextpassword_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
 }
 inline std::string* AuthenticateWeb::_internal_mutable_plaintextpassword() {
-  _has_bits_[0] |= 0x00000004u;
+  _has_bits_[0] |= 0x00000002u;
   return plaintextpassword_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
 }
 inline std::string* AuthenticateWeb::release_plaintextpassword() {
@@ -1683,14 +1648,14 @@ inline std::string* AuthenticateWeb::release_plaintextpassword() {
   if (!_internal_has_plaintextpassword()) {
     return nullptr;
   }
-  _has_bits_[0] &= ~0x00000004u;
+  _has_bits_[0] &= ~0x00000002u;
   return plaintextpassword_.ReleaseNonDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
 }
 inline void AuthenticateWeb::set_allocated_plaintextpassword(std::string* plaintextpassword) {
   if (plaintextpassword != nullptr) {
-    _has_bits_[0] |= 0x00000004u;
+    _has_bits_[0] |= 0x00000002u;
   } else {
-    _has_bits_[0] &= ~0x00000004u;
+    _has_bits_[0] &= ~0x00000002u;
   }
   plaintextpassword_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), plaintextpassword,
       GetArenaForAllocation());
