@@ -14,6 +14,8 @@
 #include <iostream>
 #include <Buffer.h>
 #include <ProtocolHelper.h>
+#include "../gen/account.pb.h"
+//#include "../gen/CreateAccount.pb.h"
 
 // Need to link with Ws2_32.lib
 #pragma comment (lib, "Ws2_32.lib")
@@ -118,6 +120,27 @@ int main(int argc, char** argv)
 		WSACleanup();
 		return 1;
 	}
+
+	//tutorial::CreateAccountWeb newAccount;
+
+	//newAccount.set_requestid(1);
+	//newAccount.set_plaintextpassword("password");
+	//newAccount.set_email("spam@abc.com");
+
+	//std::string serialized;
+	//newAccount.SerializeToString(&serialized);
+
+	//tutorial::CreateAccountWeb created;
+	//if (!created.ParseFromString(serialized))
+	//{
+	//	std::cout << "Parsing failed" << std::endl;
+	//}
+	//else
+	//{
+	//	std::cout << created.requestid() << std::endl;
+	//	std::cout << created.email() << std::endl;
+	//	std::cout << created.plaintextpassword() << std::endl;
+	//}
 
 	//=================
 

@@ -113,6 +113,16 @@ Buffer ProtocolMethods::MakeProtocol(ProtocolType type, std::string name, std::s
 
 		tempBuf.writeUInt32BE(4, LOGIN_USER);
 	}
+	else
+	{
+		tempBuf.writeUInt32BE(message.length());
+		tempBuf.writeUInt8BE(message);
+
+		int length = tempBuf.GetWriteIndex() + 8;
+		tempBuf.writeUInt32BE(0, length);
+
+		tempBuf.writeUInt32BE(4, type);
+	}
 	return tempBuf;
 }
 
@@ -161,7 +171,6 @@ sProtocolData ProtocolMethods::ParseBuffer(Buffer input)
 	}
 	else if (data.type == RECV_MESSAGE)
 	{
-
 		uint32_t nameLength = input.readUInt32BE();
 		data.userName = input.readUInt8BE(nameLength);
 		uint32_t roomLength = input.readUInt32BE();
@@ -171,7 +180,6 @@ sProtocolData ProtocolMethods::ParseBuffer(Buffer input)
 	}
 	else if (data.type == LOGIN_USER)
 	{
-
 		uint32_t nameLength = input.readUInt32BE();
 		data.userName = input.readUInt8BE(nameLength);
 		uint32_t roomLength = input.readUInt32BE();
@@ -181,11 +189,15 @@ sProtocolData ProtocolMethods::ParseBuffer(Buffer input)
 	}
 	else if (data.type == REGISTER_USER)
 	{
-
 		uint32_t nameLength = input.readUInt32BE();
 		data.userName = input.readUInt8BE(nameLength);
 		uint32_t roomLength = input.readUInt32BE();
 		data.room = input.readUInt8BE(roomLength);
+		uint32_t msgLength = input.readUInt32BE();
+		data.message = input.readUInt8BE(msgLength);
+	}
+	else
+	{
 		uint32_t msgLength = input.readUInt32BE();
 		data.message = input.readUInt8BE(msgLength);
 	}

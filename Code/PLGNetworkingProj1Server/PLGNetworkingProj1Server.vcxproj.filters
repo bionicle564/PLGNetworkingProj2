@@ -18,5 +18,8 @@
     <ClCompile Include="..\PLGNetworkProj1\server_main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\gen\account.pb.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

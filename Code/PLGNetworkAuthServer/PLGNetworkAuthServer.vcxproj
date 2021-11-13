@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\gen\account.pb.cc" />
     <ClCompile Include="auth_server_main.cpp" />
     <ClCompile Include="DBHelper.cpp" />
   </ItemGroup>
