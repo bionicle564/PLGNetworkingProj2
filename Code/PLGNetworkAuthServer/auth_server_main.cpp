@@ -11,6 +11,8 @@
 #include <Buffer.h>
 #include <ProtocolHelper.h>
 #include "../gen/account.pb.h"
+#include "SaltHasher.h"
+#include "DBHelper.h"
 
 // Need to link with Ws2_32.lib
 #pragma comment (lib, "Ws2_32.lib")
@@ -54,6 +56,9 @@ void RemoveClient(int index)
 
 int main(int argc, char** argv)
 {
+	DBHelper db;
+	db.Connect("localhost:3306", "root", "password");
+
 	WSADATA wsaData;
 	int iResult;
 
@@ -281,12 +286,20 @@ int main(int argc, char** argv)
 					}
 					else
 					{
-						std::cout << created.requestid() << std::endl;
-						std::cout << created.email() << std::endl;
-						std::cout << created.plaintextpassword() << std::endl;
-					}
+						std::string email = created.email();
+						std::string password = created.plaintextpassword();
 
-					// sql call
+						// sql call
+						SaltHasher sh;
+						std::string salt = sh.GenerateSalt(64);
+						std::string saltedPassword = salt + password;
+						std::string hashedPassword = sh.HashPassword(saltedPassword);
+
+						if (db.IsConnected())
+						{
+							db.CreateAccount(email, hashedPassword, salt);
+						}
+					}					
 				}
 				else if (data.type == G_AUTHENTICATE)
 				{
@@ -298,12 +311,16 @@ int main(int argc, char** argv)
 					}
 					else
 					{
-						std::cout << login.requestid() << std::endl;
-						std::cout << login.email() << std::endl;
-						std::cout << login.plaintextpassword() << std::endl;
-					}
+						std::string email = login.email();
+						std::string password = login.plaintextpassword();
 
-					// sql call
+						// sql call
+						if (db.IsConnected())
+						{
+							//db.LoginUser(email, hashedPassword);
+							//db.LoginUser(email, password);
+						}
+					}
 				}
 
 

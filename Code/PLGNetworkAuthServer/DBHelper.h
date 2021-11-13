@@ -30,7 +30,7 @@ public:
 	// UPDATE = and sql::Statement::executeUpdate()
 	// INSERT = sql::Statement::execute()
 
-	CreateAccountWebResult CreateAccount(const string& email, const string& password);
+	CreateAccountWebResult CreateAccount(const string& email, const string& password, const string& salt);
 	bool LoginUser(const string& email, const string& password);
 
 private:

@@ -37,7 +37,7 @@ bool DBHelper::IsConnected(void)
 	return m_IsConnected;
 }
 
-CreateAccountWebResult DBHelper::CreateAccount(const string& email, const string& password)
+CreateAccountWebResult DBHelper::CreateAccount(const string& email, const string& password, const string& salt)
 {
 	g_GetEmails->setString(1, email);
 	try
@@ -99,7 +99,7 @@ CreateAccountWebResult DBHelper::CreateAccount(const string& email, const string
 		//int result = g_InsertWebAuth->executeUpdate();
 
 		createAuth->setString(1, email);
-		createAuth->setString(2, "SALT"); //!CHANGE THIS LATER WITH ACTUAL THING
+		createAuth->setString(2, salt);
 		createAuth->setString(3, password);
 		createAuth->setInt(4, lastId);
 		int result = createAuth->executeUpdate();
@@ -183,7 +183,7 @@ void DBHelper::GeneratePreparedStatements(void)
 	//	"INSERT INTO web_auth(email, hashed_password, salt, userId) VALUES (?, ?, ?, ?);");
 
 	createUser = m_Connection->prepareStatement(
-		"INSERT INTO users (creationTime) VALUES (?);"
+		"INSERT INTO users (creation_time) VALUES (?);"
 	);
 	createAuth = m_Connection->prepareStatement(
 		"INSERT INTO web_auth (email, salt, hash_password, user_id) VALUES(? , ? , ? , ?); "
@@ -229,17 +229,17 @@ std::string DBHelper::GetTimeInDateTimeFormat() {
 
 	std::string nowAsDateTime = "";
 
-	nowAsDateTime += timeInfo->tm_year;
+	nowAsDateTime += std::to_string(timeInfo->tm_year + 1900);
 	nowAsDateTime += "-";
-	nowAsDateTime += timeInfo->tm_mon;
+	nowAsDateTime += std::to_string(timeInfo->tm_mon + 1);
 	nowAsDateTime += "-";
-	nowAsDateTime += timeInfo->tm_mday;
+	nowAsDateTime += std::to_string(timeInfo->tm_mday);
 	nowAsDateTime += " ";
-	nowAsDateTime += timeInfo->tm_hour;
+	nowAsDateTime += std::to_string(timeInfo->tm_hour);
 	nowAsDateTime += ":";
-	nowAsDateTime += timeInfo->tm_min;
+	nowAsDateTime += std::to_string(timeInfo->tm_min);
 	nowAsDateTime += ":";
-	nowAsDateTime += timeInfo->tm_sec;
+	nowAsDateTime += std::to_string(timeInfo->tm_sec);
 
 	delete timeInfo;
 
