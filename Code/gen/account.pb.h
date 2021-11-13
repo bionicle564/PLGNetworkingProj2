@@ -86,52 +86,52 @@ template<> ::tutorial::CreateAccountWebSuccess* Arena::CreateMaybeMessage<::tuto
 PROTOBUF_NAMESPACE_CLOSE
 namespace tutorial {
 
-enum CreateAccountWebFailure_reason : int {
-  CreateAccountWebFailure_reason_ACCOUNT_ALREADY_EXISTS = 0,
-  CreateAccountWebFailure_reason_INVALID_PASSWORD = 1,
-  CreateAccountWebFailure_reason_INTERNAL_SERVER_ERROR = 2
+enum CreateAccountWebFailure_Reason : int {
+  CreateAccountWebFailure_Reason_ACCOUNT_ALREADY_EXISTS = 0,
+  CreateAccountWebFailure_Reason_INVALID_PASSWORD = 1,
+  CreateAccountWebFailure_Reason_INTERNAL_SERVER_ERROR = 2
 };
-bool CreateAccountWebFailure_reason_IsValid(int value);
-constexpr CreateAccountWebFailure_reason CreateAccountWebFailure_reason_reason_MIN = CreateAccountWebFailure_reason_ACCOUNT_ALREADY_EXISTS;
-constexpr CreateAccountWebFailure_reason CreateAccountWebFailure_reason_reason_MAX = CreateAccountWebFailure_reason_INTERNAL_SERVER_ERROR;
-constexpr int CreateAccountWebFailure_reason_reason_ARRAYSIZE = CreateAccountWebFailure_reason_reason_MAX + 1;
+bool CreateAccountWebFailure_Reason_IsValid(int value);
+constexpr CreateAccountWebFailure_Reason CreateAccountWebFailure_Reason_Reason_MIN = CreateAccountWebFailure_Reason_ACCOUNT_ALREADY_EXISTS;
+constexpr CreateAccountWebFailure_Reason CreateAccountWebFailure_Reason_Reason_MAX = CreateAccountWebFailure_Reason_INTERNAL_SERVER_ERROR;
+constexpr int CreateAccountWebFailure_Reason_Reason_ARRAYSIZE = CreateAccountWebFailure_Reason_Reason_MAX + 1;
 
-const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* CreateAccountWebFailure_reason_descriptor();
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* CreateAccountWebFailure_Reason_descriptor();
 template<typename T>
-inline const std::string& CreateAccountWebFailure_reason_Name(T enum_t_value) {
-  static_assert(::std::is_same<T, CreateAccountWebFailure_reason>::value ||
+inline const std::string& CreateAccountWebFailure_Reason_Name(T enum_t_value) {
+  static_assert(::std::is_same<T, CreateAccountWebFailure_Reason>::value ||
     ::std::is_integral<T>::value,
-    "Incorrect type passed to function CreateAccountWebFailure_reason_Name.");
+    "Incorrect type passed to function CreateAccountWebFailure_Reason_Name.");
   return ::PROTOBUF_NAMESPACE_ID::internal::NameOfEnum(
-    CreateAccountWebFailure_reason_descriptor(), enum_t_value);
+    CreateAccountWebFailure_Reason_descriptor(), enum_t_value);
 }
-inline bool CreateAccountWebFailure_reason_Parse(
-    ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, CreateAccountWebFailure_reason* value) {
-  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<CreateAccountWebFailure_reason>(
-    CreateAccountWebFailure_reason_descriptor(), name, value);
+inline bool CreateAccountWebFailure_Reason_Parse(
+    ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, CreateAccountWebFailure_Reason* value) {
+  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<CreateAccountWebFailure_Reason>(
+    CreateAccountWebFailure_Reason_descriptor(), name, value);
 }
-enum AuthenticateWebFailure_reason : int {
-  AuthenticateWebFailure_reason_INVALID_CREDENTIALS = 0,
-  AuthenticateWebFailure_reason_INTERNAL_SERVER_ERROR = 1
+enum AuthenticateWebFailure_Reason : int {
+  AuthenticateWebFailure_Reason_INVALID_CREDENTIALS = 0,
+  AuthenticateWebFailure_Reason_INTERNAL_SERVER_ERROR = 1
 };
-bool AuthenticateWebFailure_reason_IsValid(int value);
-constexpr AuthenticateWebFailure_reason AuthenticateWebFailure_reason_reason_MIN = AuthenticateWebFailure_reason_INVALID_CREDENTIALS;
-constexpr AuthenticateWebFailure_reason AuthenticateWebFailure_reason_reason_MAX = AuthenticateWebFailure_reason_INTERNAL_SERVER_ERROR;
-constexpr int AuthenticateWebFailure_reason_reason_ARRAYSIZE = AuthenticateWebFailure_reason_reason_MAX + 1;
+bool AuthenticateWebFailure_Reason_IsValid(int value);
+constexpr AuthenticateWebFailure_Reason AuthenticateWebFailure_Reason_Reason_MIN = AuthenticateWebFailure_Reason_INVALID_CREDENTIALS;
+constexpr AuthenticateWebFailure_Reason AuthenticateWebFailure_Reason_Reason_MAX = AuthenticateWebFailure_Reason_INTERNAL_SERVER_ERROR;
+constexpr int AuthenticateWebFailure_Reason_Reason_ARRAYSIZE = AuthenticateWebFailure_Reason_Reason_MAX + 1;
 
-const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* AuthenticateWebFailure_reason_descriptor();
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* AuthenticateWebFailure_Reason_descriptor();
 template<typename T>
-inline const std::string& AuthenticateWebFailure_reason_Name(T enum_t_value) {
-  static_assert(::std::is_same<T, AuthenticateWebFailure_reason>::value ||
+inline const std::string& AuthenticateWebFailure_Reason_Name(T enum_t_value) {
+  static_assert(::std::is_same<T, AuthenticateWebFailure_Reason>::value ||
     ::std::is_integral<T>::value,
-    "Incorrect type passed to function AuthenticateWebFailure_reason_Name.");
+    "Incorrect type passed to function AuthenticateWebFailure_Reason_Name.");
   return ::PROTOBUF_NAMESPACE_ID::internal::NameOfEnum(
-    AuthenticateWebFailure_reason_descriptor(), enum_t_value);
+    AuthenticateWebFailure_Reason_descriptor(), enum_t_value);
 }
-inline bool AuthenticateWebFailure_reason_Parse(
-    ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, AuthenticateWebFailure_reason* value) {
-  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<AuthenticateWebFailure_reason>(
-    AuthenticateWebFailure_reason_descriptor(), name, value);
+inline bool AuthenticateWebFailure_Reason_Parse(
+    ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, AuthenticateWebFailure_Reason* value) {
+  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<AuthenticateWebFailure_Reason>(
+    AuthenticateWebFailure_Reason_descriptor(), name, value);
 }
 // ===================================================================
 
@@ -629,42 +629,43 @@ class CreateAccountWebFailure final :
 
   // nested types ----------------------------------------------------
 
-  typedef CreateAccountWebFailure_reason reason;
-  static constexpr reason ACCOUNT_ALREADY_EXISTS =
-    CreateAccountWebFailure_reason_ACCOUNT_ALREADY_EXISTS;
-  static constexpr reason INVALID_PASSWORD =
-    CreateAccountWebFailure_reason_INVALID_PASSWORD;
-  static constexpr reason INTERNAL_SERVER_ERROR =
-    CreateAccountWebFailure_reason_INTERNAL_SERVER_ERROR;
-  static inline bool reason_IsValid(int value) {
-    return CreateAccountWebFailure_reason_IsValid(value);
+  typedef CreateAccountWebFailure_Reason Reason;
+  static constexpr Reason ACCOUNT_ALREADY_EXISTS =
+    CreateAccountWebFailure_Reason_ACCOUNT_ALREADY_EXISTS;
+  static constexpr Reason INVALID_PASSWORD =
+    CreateAccountWebFailure_Reason_INVALID_PASSWORD;
+  static constexpr Reason INTERNAL_SERVER_ERROR =
+    CreateAccountWebFailure_Reason_INTERNAL_SERVER_ERROR;
+  static inline bool Reason_IsValid(int value) {
+    return CreateAccountWebFailure_Reason_IsValid(value);
   }
-  static constexpr reason reason_MIN =
-    CreateAccountWebFailure_reason_reason_MIN;
-  static constexpr reason reason_MAX =
-    CreateAccountWebFailure_reason_reason_MAX;
-  static constexpr int reason_ARRAYSIZE =
-    CreateAccountWebFailure_reason_reason_ARRAYSIZE;
+  static constexpr Reason Reason_MIN =
+    CreateAccountWebFailure_Reason_Reason_MIN;
+  static constexpr Reason Reason_MAX =
+    CreateAccountWebFailure_Reason_Reason_MAX;
+  static constexpr int Reason_ARRAYSIZE =
+    CreateAccountWebFailure_Reason_Reason_ARRAYSIZE;
   static inline const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor*
-  reason_descriptor() {
-    return CreateAccountWebFailure_reason_descriptor();
+  Reason_descriptor() {
+    return CreateAccountWebFailure_Reason_descriptor();
   }
   template<typename T>
-  static inline const std::string& reason_Name(T enum_t_value) {
-    static_assert(::std::is_same<T, reason>::value ||
+  static inline const std::string& Reason_Name(T enum_t_value) {
+    static_assert(::std::is_same<T, Reason>::value ||
       ::std::is_integral<T>::value,
-      "Incorrect type passed to function reason_Name.");
-    return CreateAccountWebFailure_reason_Name(enum_t_value);
+      "Incorrect type passed to function Reason_Name.");
+    return CreateAccountWebFailure_Reason_Name(enum_t_value);
   }
-  static inline bool reason_Parse(::PROTOBUF_NAMESPACE_ID::ConstStringParam name,
-      reason* value) {
-    return CreateAccountWebFailure_reason_Parse(name, value);
+  static inline bool Reason_Parse(::PROTOBUF_NAMESPACE_ID::ConstStringParam name,
+      Reason* value) {
+    return CreateAccountWebFailure_Reason_Parse(name, value);
   }
 
   // accessors -------------------------------------------------------
 
   enum : int {
     kRequestIdFieldNumber = 1,
+    kReturnCodeFieldNumber = 2,
   };
   // required int32 requestId = 1;
   bool has_requestid() const;
@@ -679,9 +680,25 @@ class CreateAccountWebFailure final :
   void _internal_set_requestid(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
+  // required .tutorial.CreateAccountWebFailure.Reason returnCode = 2;
+  bool has_returncode() const;
+  private:
+  bool _internal_has_returncode() const;
+  public:
+  void clear_returncode();
+  ::tutorial::CreateAccountWebFailure_Reason returncode() const;
+  void set_returncode(::tutorial::CreateAccountWebFailure_Reason value);
+  private:
+  ::tutorial::CreateAccountWebFailure_Reason _internal_returncode() const;
+  void _internal_set_returncode(::tutorial::CreateAccountWebFailure_Reason value);
+  public:
+
   // @@protoc_insertion_point(class_scope:tutorial.CreateAccountWebFailure)
  private:
   class _Internal;
+
+  // helper for ByteSizeLong()
+  size_t RequiredFieldsByteSizeFallback() const;
 
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
@@ -689,6 +706,7 @@ class CreateAccountWebFailure final :
   ::PROTOBUF_NAMESPACE_ID::internal::HasBits<1> _has_bits_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   ::PROTOBUF_NAMESPACE_ID::int32 requestid_;
+  int returncode_;
   friend struct ::TableStruct_account_2eproto;
 };
 // -------------------------------------------------------------------
@@ -1207,40 +1225,41 @@ class AuthenticateWebFailure final :
 
   // nested types ----------------------------------------------------
 
-  typedef AuthenticateWebFailure_reason reason;
-  static constexpr reason INVALID_CREDENTIALS =
-    AuthenticateWebFailure_reason_INVALID_CREDENTIALS;
-  static constexpr reason INTERNAL_SERVER_ERROR =
-    AuthenticateWebFailure_reason_INTERNAL_SERVER_ERROR;
-  static inline bool reason_IsValid(int value) {
-    return AuthenticateWebFailure_reason_IsValid(value);
+  typedef AuthenticateWebFailure_Reason Reason;
+  static constexpr Reason INVALID_CREDENTIALS =
+    AuthenticateWebFailure_Reason_INVALID_CREDENTIALS;
+  static constexpr Reason INTERNAL_SERVER_ERROR =
+    AuthenticateWebFailure_Reason_INTERNAL_SERVER_ERROR;
+  static inline bool Reason_IsValid(int value) {
+    return AuthenticateWebFailure_Reason_IsValid(value);
   }
-  static constexpr reason reason_MIN =
-    AuthenticateWebFailure_reason_reason_MIN;
-  static constexpr reason reason_MAX =
-    AuthenticateWebFailure_reason_reason_MAX;
-  static constexpr int reason_ARRAYSIZE =
-    AuthenticateWebFailure_reason_reason_ARRAYSIZE;
+  static constexpr Reason Reason_MIN =
+    AuthenticateWebFailure_Reason_Reason_MIN;
+  static constexpr Reason Reason_MAX =
+    AuthenticateWebFailure_Reason_Reason_MAX;
+  static constexpr int Reason_ARRAYSIZE =
+    AuthenticateWebFailure_Reason_Reason_ARRAYSIZE;
   static inline const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor*
-  reason_descriptor() {
-    return AuthenticateWebFailure_reason_descriptor();
+  Reason_descriptor() {
+    return AuthenticateWebFailure_Reason_descriptor();
   }
   template<typename T>
-  static inline const std::string& reason_Name(T enum_t_value) {
-    static_assert(::std::is_same<T, reason>::value ||
+  static inline const std::string& Reason_Name(T enum_t_value) {
+    static_assert(::std::is_same<T, Reason>::value ||
       ::std::is_integral<T>::value,
-      "Incorrect type passed to function reason_Name.");
-    return AuthenticateWebFailure_reason_Name(enum_t_value);
+      "Incorrect type passed to function Reason_Name.");
+    return AuthenticateWebFailure_Reason_Name(enum_t_value);
   }
-  static inline bool reason_Parse(::PROTOBUF_NAMESPACE_ID::ConstStringParam name,
-      reason* value) {
-    return AuthenticateWebFailure_reason_Parse(name, value);
+  static inline bool Reason_Parse(::PROTOBUF_NAMESPACE_ID::ConstStringParam name,
+      Reason* value) {
+    return AuthenticateWebFailure_Reason_Parse(name, value);
   }
 
   // accessors -------------------------------------------------------
 
   enum : int {
     kRequestIdFieldNumber = 1,
+    kReturnCodeFieldNumber = 2,
   };
   // required int32 requestId = 1;
   bool has_requestid() const;
@@ -1255,9 +1274,25 @@ class AuthenticateWebFailure final :
   void _internal_set_requestid(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
+  // required .tutorial.AuthenticateWebFailure.Reason returnCode = 2;
+  bool has_returncode() const;
+  private:
+  bool _internal_has_returncode() const;
+  public:
+  void clear_returncode();
+  ::tutorial::AuthenticateWebFailure_Reason returncode() const;
+  void set_returncode(::tutorial::AuthenticateWebFailure_Reason value);
+  private:
+  ::tutorial::AuthenticateWebFailure_Reason _internal_returncode() const;
+  void _internal_set_returncode(::tutorial::AuthenticateWebFailure_Reason value);
+  public:
+
   // @@protoc_insertion_point(class_scope:tutorial.AuthenticateWebFailure)
  private:
   class _Internal;
+
+  // helper for ByteSizeLong()
+  size_t RequiredFieldsByteSizeFallback() const;
 
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
@@ -1265,6 +1300,7 @@ class AuthenticateWebFailure final :
   ::PROTOBUF_NAMESPACE_ID::internal::HasBits<1> _has_bits_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   ::PROTOBUF_NAMESPACE_ID::int32 requestid_;
+  int returncode_;
   friend struct ::TableStruct_account_2eproto;
 };
 // ===================================================================
@@ -1512,6 +1548,35 @@ inline void CreateAccountWebFailure::_internal_set_requestid(::PROTOBUF_NAMESPAC
 inline void CreateAccountWebFailure::set_requestid(::PROTOBUF_NAMESPACE_ID::int32 value) {
   _internal_set_requestid(value);
   // @@protoc_insertion_point(field_set:tutorial.CreateAccountWebFailure.requestId)
+}
+
+// required .tutorial.CreateAccountWebFailure.Reason returnCode = 2;
+inline bool CreateAccountWebFailure::_internal_has_returncode() const {
+  bool value = (_has_bits_[0] & 0x00000002u) != 0;
+  return value;
+}
+inline bool CreateAccountWebFailure::has_returncode() const {
+  return _internal_has_returncode();
+}
+inline void CreateAccountWebFailure::clear_returncode() {
+  returncode_ = 0;
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline ::tutorial::CreateAccountWebFailure_Reason CreateAccountWebFailure::_internal_returncode() const {
+  return static_cast< ::tutorial::CreateAccountWebFailure_Reason >(returncode_);
+}
+inline ::tutorial::CreateAccountWebFailure_Reason CreateAccountWebFailure::returncode() const {
+  // @@protoc_insertion_point(field_get:tutorial.CreateAccountWebFailure.returnCode)
+  return _internal_returncode();
+}
+inline void CreateAccountWebFailure::_internal_set_returncode(::tutorial::CreateAccountWebFailure_Reason value) {
+  assert(::tutorial::CreateAccountWebFailure_Reason_IsValid(value));
+  _has_bits_[0] |= 0x00000002u;
+  returncode_ = value;
+}
+inline void CreateAccountWebFailure::set_returncode(::tutorial::CreateAccountWebFailure_Reason value) {
+  _internal_set_returncode(value);
+  // @@protoc_insertion_point(field_set:tutorial.CreateAccountWebFailure.returnCode)
 }
 
 // -------------------------------------------------------------------
@@ -1812,6 +1877,35 @@ inline void AuthenticateWebFailure::set_requestid(::PROTOBUF_NAMESPACE_ID::int32
   // @@protoc_insertion_point(field_set:tutorial.AuthenticateWebFailure.requestId)
 }
 
+// required .tutorial.AuthenticateWebFailure.Reason returnCode = 2;
+inline bool AuthenticateWebFailure::_internal_has_returncode() const {
+  bool value = (_has_bits_[0] & 0x00000002u) != 0;
+  return value;
+}
+inline bool AuthenticateWebFailure::has_returncode() const {
+  return _internal_has_returncode();
+}
+inline void AuthenticateWebFailure::clear_returncode() {
+  returncode_ = 0;
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline ::tutorial::AuthenticateWebFailure_Reason AuthenticateWebFailure::_internal_returncode() const {
+  return static_cast< ::tutorial::AuthenticateWebFailure_Reason >(returncode_);
+}
+inline ::tutorial::AuthenticateWebFailure_Reason AuthenticateWebFailure::returncode() const {
+  // @@protoc_insertion_point(field_get:tutorial.AuthenticateWebFailure.returnCode)
+  return _internal_returncode();
+}
+inline void AuthenticateWebFailure::_internal_set_returncode(::tutorial::AuthenticateWebFailure_Reason value) {
+  assert(::tutorial::AuthenticateWebFailure_Reason_IsValid(value));
+  _has_bits_[0] |= 0x00000002u;
+  returncode_ = value;
+}
+inline void AuthenticateWebFailure::set_returncode(::tutorial::AuthenticateWebFailure_Reason value) {
+  _internal_set_returncode(value);
+  // @@protoc_insertion_point(field_set:tutorial.AuthenticateWebFailure.returnCode)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
@@ -1832,15 +1926,15 @@ inline void AuthenticateWebFailure::set_requestid(::PROTOBUF_NAMESPACE_ID::int32
 
 PROTOBUF_NAMESPACE_OPEN
 
-template <> struct is_proto_enum< ::tutorial::CreateAccountWebFailure_reason> : ::std::true_type {};
+template <> struct is_proto_enum< ::tutorial::CreateAccountWebFailure_Reason> : ::std::true_type {};
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::tutorial::CreateAccountWebFailure_reason>() {
-  return ::tutorial::CreateAccountWebFailure_reason_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::tutorial::CreateAccountWebFailure_Reason>() {
+  return ::tutorial::CreateAccountWebFailure_Reason_descriptor();
 }
-template <> struct is_proto_enum< ::tutorial::AuthenticateWebFailure_reason> : ::std::true_type {};
+template <> struct is_proto_enum< ::tutorial::AuthenticateWebFailure_Reason> : ::std::true_type {};
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::tutorial::AuthenticateWebFailure_reason>() {
-  return ::tutorial::AuthenticateWebFailure_reason_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::tutorial::AuthenticateWebFailure_Reason>() {
+  return ::tutorial::AuthenticateWebFailure_Reason_descriptor();
 }
 
 PROTOBUF_NAMESPACE_CLOSE

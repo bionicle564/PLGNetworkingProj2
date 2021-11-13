@@ -297,7 +297,37 @@ int main(int argc, char** argv)
 
 						if (db.IsConnected())
 						{
-							db.CreateAccount(email, hashedPassword, salt);
+							DatabaseResponse result = db.CreateAccount(email, hashedPassword, salt);
+							if (result.result == CreateAccountWebResult::SUCCESS)
+							{
+								tutorial::CreateAccountWebSuccess successResponse;
+
+								successResponse.set_requestid(1);
+								successResponse.set_userid(result.userId);
+
+								std::string successString;
+								successResponse.SerializeToString(&successString);
+
+								outgoing = ProtocolMethods::MakeProtocol(G_AUTHENTICATE_SUCCESS, "", "", successString);
+							}
+							else
+							{
+								tutorial::CreateAccountWebFailure failureResponse;
+
+								failureResponse.set_requestid(1);
+
+								if (result.result == CreateAccountWebResult::ACCOUNT_ALREADY_EXISTS)
+									failureResponse.set_returncode(tutorial::CreateAccountWebFailure::ACCOUNT_ALREADY_EXISTS);
+								else if (result.result == CreateAccountWebResult::INTERNAL_SERVER_ERROR)
+									failureResponse.set_returncode(tutorial::CreateAccountWebFailure::INTERNAL_SERVER_ERROR);
+								else if (result.result == CreateAccountWebResult::INVALID_PASSWORD)
+									failureResponse.set_returncode(tutorial::CreateAccountWebFailure::INVALID_PASSWORD);
+
+								std::string failureString;
+								failureResponse.SerializeToString(&failureString);
+
+								outgoing = ProtocolMethods::MakeProtocol(G_AUTHENTICATE_FAILURE, "", "", failureString);
+							}
 						}
 					}					
 				}
@@ -317,8 +347,10 @@ int main(int argc, char** argv)
 						// sql call
 						if (db.IsConnected())
 						{
-							//db.LoginUser(email, hashedPassword);
-							//db.LoginUser(email, password);
+							if (db.LoginUser(email, password))
+							{
+								int i = 0;
+							}
 						}
 					}
 				}
@@ -357,34 +389,32 @@ int main(int argc, char** argv)
 						buf.buf = payload;
 						buf.len = outgoing.readUInt32BE(0);
 
-						for (int i = 0; i < TotalClients; i++)
+						iResult = WSASend(
+							client->socket,
+							&(buf),
+							1,
+							&SentBytes,
+							Flags,
+							NULL,
+							NULL
+						);
+
+						// Example using send instead of WSASend...
+						//int iSendResult = send(client->socket, client->dataBuf.buf, iResult, 0);
+
+						if (SentBytes == SOCKET_ERROR)
 						{
-							iResult = WSASend(
-								ClientArray[i]->socket,
-								&(buf),
-								1,
-								&SentBytes,
-								Flags,
-								NULL,
-								NULL
-							);
-
-							// Example using send instead of WSASend...
-							//int iSendResult = send(client->socket, client->dataBuf.buf, iResult, 0);
-
-							if (SentBytes == SOCKET_ERROR)
-							{
-								printf("send error %d\n", WSAGetLastError());
-							}
-							else if (SentBytes == 0)
-							{
-								printf("Send result is 0\n");
-							}
-							else
-							{
-								printf("Successfully sent %d bytes!\n", SentBytes);
-							}
+							printf("send error %d\n", WSAGetLastError());
 						}
+						else if (SentBytes == 0)
+						{
+							printf("Send result is 0\n");
+						}
+						else
+						{
+							printf("Successfully sent %d bytes!\n", SentBytes);
+						}
+
 						delete[] payload; //clean the payload
 					}
 				}

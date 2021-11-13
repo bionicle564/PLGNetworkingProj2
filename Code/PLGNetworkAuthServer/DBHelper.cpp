@@ -37,8 +37,10 @@ bool DBHelper::IsConnected(void)
 	return m_IsConnected;
 }
 
-CreateAccountWebResult DBHelper::CreateAccount(const string& email, const string& password, const string& salt)
+DatabaseResponse DBHelper::CreateAccount(const string& email, const string& password, const string& salt)
 {
+	DatabaseResponse reponse;
+
 	g_GetEmails->setString(1, email);
 	try
 	{
@@ -47,19 +49,22 @@ CreateAccountWebResult DBHelper::CreateAccount(const string& email, const string
 	catch (SQLException e)
 	{
 		printf("Failed to retrieved web_auth data!\n");
-		return CreateAccountWebResult::INTERNAL_SERVER_ERROR;
+		reponse.result = CreateAccountWebResult::INTERNAL_SERVER_ERROR;
+		return reponse;
 	}
 
 	if (m_ResultSet->rowsCount() > 0)
 	{
 		printf("Account already exists with email!\n");
-		return CreateAccountWebResult::ACCOUNT_ALREADY_EXISTS;
+		reponse.result = CreateAccountWebResult::ACCOUNT_ALREADY_EXISTS;
+		return reponse;
 	}
 
 	//This is for adding the user
 	//YYYY-MM-DD hh:mm:ss <-Format for Timestamp and DateTime	
 	
 	std::string nowAsDateTime = GetTimeInDateTimeFormat();
+	reponse.date = nowAsDateTime;
 
 	try {
 		createUser->setString(1, nowAsDateTime);
@@ -68,7 +73,8 @@ CreateAccountWebResult DBHelper::CreateAccount(const string& email, const string
 	catch (SQLException e)
 	{
 		printf("Failed to insert account into web_auth!\n");
-		return CreateAccountWebResult::INTERNAL_SERVER_ERROR;
+		reponse.result = CreateAccountWebResult::INTERNAL_SERVER_ERROR;
+		return reponse;
 	}
 
 	//this is for adding the authentication data
@@ -80,7 +86,8 @@ CreateAccountWebResult DBHelper::CreateAccount(const string& email, const string
 	catch (SQLException e)
 	{
 		printf("Failed to retrieve last insert id!\n");
-		return CreateAccountWebResult::INTERNAL_SERVER_ERROR;
+		reponse.result = CreateAccountWebResult::INTERNAL_SERVER_ERROR;
+		return reponse;
 	}
 	int lastId = 0;
 	if (m_ResultSet->next())
@@ -108,7 +115,8 @@ CreateAccountWebResult DBHelper::CreateAccount(const string& email, const string
 	catch (SQLException e)
 	{
 		printf("Failed to insert account into web_auth!\n");
-		return CreateAccountWebResult::INTERNAL_SERVER_ERROR;
+		reponse.result = CreateAccountWebResult::INTERNAL_SERVER_ERROR;
+		return reponse;
 	}
 
 	sql::Statement* stmt2 = m_Connection->createStatement();
@@ -119,17 +127,20 @@ CreateAccountWebResult DBHelper::CreateAccount(const string& email, const string
 	catch (SQLException e)
 	{
 		printf("Failed to retrieve last insert id!\n");
-		return CreateAccountWebResult::INTERNAL_SERVER_ERROR;
+		reponse.result = CreateAccountWebResult::INTERNAL_SERVER_ERROR;
+		return reponse;
 	}
 	lastId = 0;
 	if (m_ResultSet->next())
 	{
 		lastId = m_ResultSet->getInt(1);
+		reponse.userId = lastId;
 	}
 	delete stmt2;
 
 	printf("Successfully retrieved web_auth data!\n");
-	return CreateAccountWebResult::SUCCESS;
+	reponse.result = CreateAccountWebResult::SUCCESS;
+	return reponse;
 }
 
 bool DBHelper::LoginUser(const string& email, const string& password) {

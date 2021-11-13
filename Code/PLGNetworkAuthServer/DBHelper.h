@@ -16,6 +16,13 @@ enum CreateAccountWebResult
 	INTERNAL_SERVER_ERROR
 };
 
+struct DatabaseResponse
+{
+	CreateAccountWebResult result;
+	std::string date;
+	int userId;
+};
+
 class DBHelper
 {
 public:
@@ -30,7 +37,7 @@ public:
 	// UPDATE = and sql::Statement::executeUpdate()
 	// INSERT = sql::Statement::execute()
 
-	CreateAccountWebResult CreateAccount(const string& email, const string& password, const string& salt);
+	DatabaseResponse CreateAccount(const string& email, const string& password, const string& salt);
 	bool LoginUser(const string& email, const string& password);
 
 private:

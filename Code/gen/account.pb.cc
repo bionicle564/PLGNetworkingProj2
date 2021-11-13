@@ -46,7 +46,9 @@ struct CreateAccountWebSuccessDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT CreateAccountWebSuccessDefaultTypeInternal _CreateAccountWebSuccess_default_instance_;
 constexpr CreateAccountWebFailure::CreateAccountWebFailure(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
-  : requestid_(0){}
+  : requestid_(0)
+  , returncode_(0)
+{}
 struct CreateAccountWebFailureDefaultTypeInternal {
   constexpr CreateAccountWebFailureDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
@@ -86,7 +88,9 @@ struct AuthenticateWebSuccessDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT AuthenticateWebSuccessDefaultTypeInternal _AuthenticateWebSuccess_default_instance_;
 constexpr AuthenticateWebFailure::AuthenticateWebFailure(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
-  : requestid_(0){}
+  : requestid_(0)
+  , returncode_(0)
+{}
 struct AuthenticateWebFailureDefaultTypeInternal {
   constexpr AuthenticateWebFailureDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
@@ -131,7 +135,9 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_account_2eproto::offsets[] PRO
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
   PROTOBUF_FIELD_OFFSET(::tutorial::CreateAccountWebFailure, requestid_),
+  PROTOBUF_FIELD_OFFSET(::tutorial::CreateAccountWebFailure, returncode_),
   0,
+  1,
   PROTOBUF_FIELD_OFFSET(::tutorial::AuthenticateWeb, _has_bits_),
   PROTOBUF_FIELD_OFFSET(::tutorial::AuthenticateWeb, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -163,15 +169,17 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_account_2eproto::offsets[] PRO
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
   PROTOBUF_FIELD_OFFSET(::tutorial::AuthenticateWebFailure, requestid_),
+  PROTOBUF_FIELD_OFFSET(::tutorial::AuthenticateWebFailure, returncode_),
   0,
+  1,
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, 9, -1, sizeof(::tutorial::CreateAccountWeb)},
   { 12, 20, -1, sizeof(::tutorial::CreateAccountWebSuccess)},
-  { 22, 29, -1, sizeof(::tutorial::CreateAccountWebFailure)},
-  { 30, 39, -1, sizeof(::tutorial::AuthenticateWeb)},
-  { 42, 51, -1, sizeof(::tutorial::AuthenticateWebSuccess)},
-  { 54, 61, -1, sizeof(::tutorial::AuthenticateWebFailure)},
+  { 22, 30, -1, sizeof(::tutorial::CreateAccountWebFailure)},
+  { 32, 41, -1, sizeof(::tutorial::AuthenticateWeb)},
+  { 44, 53, -1, sizeof(::tutorial::AuthenticateWebSuccess)},
+  { 56, 64, -1, sizeof(::tutorial::AuthenticateWebFailure)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -188,21 +196,24 @@ const char descriptor_table_protodef_account_2eproto[] PROTOBUF_SECTION_VARIABLE
   "ntWeb\022\021\n\trequestId\030\001 \002(\005\022\r\n\005email\030\002 \002(\t\022"
   "\031\n\021plaintextPassword\030\003 \002(\t\"<\n\027CreateAcco"
   "untWebSuccess\022\021\n\trequestId\030\001 \002(\005\022\016\n\006user"
-  "Id\030\002 \002(\005\"\203\001\n\027CreateAccountWebFailure\022\021\n\t"
-  "requestId\030\001 \002(\005\"U\n\006reason\022\032\n\026ACCOUNT_ALR"
-  "EADY_EXISTS\020\000\022\024\n\020INVALID_PASSWORD\020\001\022\031\n\025I"
-  "NTERNAL_SERVER_ERROR\020\002\"N\n\017AuthenticateWe"
-  "b\022\021\n\trequestId\030\001 \002(\005\022\r\n\005email\030\002 \002(\t\022\031\n\021p"
-  "laintextPassword\030\003 \002(\t\"Q\n\026AuthenticateWe"
-  "bSuccess\022\021\n\trequestId\030\001 \002(\005\022\016\n\006userId\030\002 "
-  "\002(\005\022\024\n\014creationDate\030\003 \002(\t\"i\n\026Authenticat"
-  "eWebFailure\022\021\n\trequestId\030\001 \002(\005\"<\n\006reason"
-  "\022\027\n\023INVALID_CREDENTIALS\020\000\022\031\n\025INTERNAL_SE"
-  "RVER_ERROR\020\001"
+  "Id\030\002 \002(\005\"\301\001\n\027CreateAccountWebFailure\022\021\n\t"
+  "requestId\030\001 \002(\005\022<\n\nreturnCode\030\002 \002(\0162(.tu"
+  "torial.CreateAccountWebFailure.Reason\"U\n"
+  "\006Reason\022\032\n\026ACCOUNT_ALREADY_EXISTS\020\000\022\024\n\020I"
+  "NVALID_PASSWORD\020\001\022\031\n\025INTERNAL_SERVER_ERR"
+  "OR\020\002\"N\n\017AuthenticateWeb\022\021\n\trequestId\030\001 \002"
+  "(\005\022\r\n\005email\030\002 \002(\t\022\031\n\021plaintextPassword\030\003"
+  " \002(\t\"Q\n\026AuthenticateWebSuccess\022\021\n\treques"
+  "tId\030\001 \002(\005\022\016\n\006userId\030\002 \002(\005\022\024\n\014creationDat"
+  "e\030\003 \002(\t\"\246\001\n\026AuthenticateWebFailure\022\021\n\tre"
+  "questId\030\001 \002(\005\022;\n\nreturnCode\030\002 \002(\0162\'.tuto"
+  "rial.AuthenticateWebFailure.Reason\"<\n\006Re"
+  "ason\022\027\n\023INVALID_CREDENTIALS\020\000\022\031\n\025INTERNA"
+  "L_SERVER_ERROR\020\001"
   ;
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_account_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_account_2eproto = {
-  false, false, 572, descriptor_table_protodef_account_2eproto, "account.proto", 
+  false, false, 696, descriptor_table_protodef_account_2eproto, "account.proto", 
   &descriptor_table_account_2eproto_once, nullptr, 0, 6,
   schemas, file_default_instances, TableStruct_account_2eproto::offsets,
   file_level_metadata_account_2eproto, file_level_enum_descriptors_account_2eproto, file_level_service_descriptors_account_2eproto,
@@ -214,11 +225,11 @@ PROTOBUF_ATTRIBUTE_WEAK const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable
 // Force running AddDescriptors() at dynamic initialization time.
 PROTOBUF_ATTRIBUTE_INIT_PRIORITY static ::PROTOBUF_NAMESPACE_ID::internal::AddDescriptorsRunner dynamic_init_dummy_account_2eproto(&descriptor_table_account_2eproto);
 namespace tutorial {
-const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* CreateAccountWebFailure_reason_descriptor() {
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* CreateAccountWebFailure_Reason_descriptor() {
   ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_account_2eproto);
   return file_level_enum_descriptors_account_2eproto[0];
 }
-bool CreateAccountWebFailure_reason_IsValid(int value) {
+bool CreateAccountWebFailure_Reason_IsValid(int value) {
   switch (value) {
     case 0:
     case 1:
@@ -230,18 +241,18 @@ bool CreateAccountWebFailure_reason_IsValid(int value) {
 }
 
 #if (__cplusplus < 201703) && (!defined(_MSC_VER) || _MSC_VER >= 1900)
-constexpr CreateAccountWebFailure_reason CreateAccountWebFailure::ACCOUNT_ALREADY_EXISTS;
-constexpr CreateAccountWebFailure_reason CreateAccountWebFailure::INVALID_PASSWORD;
-constexpr CreateAccountWebFailure_reason CreateAccountWebFailure::INTERNAL_SERVER_ERROR;
-constexpr CreateAccountWebFailure_reason CreateAccountWebFailure::reason_MIN;
-constexpr CreateAccountWebFailure_reason CreateAccountWebFailure::reason_MAX;
-constexpr int CreateAccountWebFailure::reason_ARRAYSIZE;
+constexpr CreateAccountWebFailure_Reason CreateAccountWebFailure::ACCOUNT_ALREADY_EXISTS;
+constexpr CreateAccountWebFailure_Reason CreateAccountWebFailure::INVALID_PASSWORD;
+constexpr CreateAccountWebFailure_Reason CreateAccountWebFailure::INTERNAL_SERVER_ERROR;
+constexpr CreateAccountWebFailure_Reason CreateAccountWebFailure::Reason_MIN;
+constexpr CreateAccountWebFailure_Reason CreateAccountWebFailure::Reason_MAX;
+constexpr int CreateAccountWebFailure::Reason_ARRAYSIZE;
 #endif  // (__cplusplus < 201703) && (!defined(_MSC_VER) || _MSC_VER >= 1900)
-const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* AuthenticateWebFailure_reason_descriptor() {
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* AuthenticateWebFailure_Reason_descriptor() {
   ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_account_2eproto);
   return file_level_enum_descriptors_account_2eproto[1];
 }
-bool AuthenticateWebFailure_reason_IsValid(int value) {
+bool AuthenticateWebFailure_Reason_IsValid(int value) {
   switch (value) {
     case 0:
     case 1:
@@ -252,11 +263,11 @@ bool AuthenticateWebFailure_reason_IsValid(int value) {
 }
 
 #if (__cplusplus < 201703) && (!defined(_MSC_VER) || _MSC_VER >= 1900)
-constexpr AuthenticateWebFailure_reason AuthenticateWebFailure::INVALID_CREDENTIALS;
-constexpr AuthenticateWebFailure_reason AuthenticateWebFailure::INTERNAL_SERVER_ERROR;
-constexpr AuthenticateWebFailure_reason AuthenticateWebFailure::reason_MIN;
-constexpr AuthenticateWebFailure_reason AuthenticateWebFailure::reason_MAX;
-constexpr int AuthenticateWebFailure::reason_ARRAYSIZE;
+constexpr AuthenticateWebFailure_Reason AuthenticateWebFailure::INVALID_CREDENTIALS;
+constexpr AuthenticateWebFailure_Reason AuthenticateWebFailure::INTERNAL_SERVER_ERROR;
+constexpr AuthenticateWebFailure_Reason AuthenticateWebFailure::Reason_MIN;
+constexpr AuthenticateWebFailure_Reason AuthenticateWebFailure::Reason_MAX;
+constexpr int AuthenticateWebFailure::Reason_ARRAYSIZE;
 #endif  // (__cplusplus < 201703) && (!defined(_MSC_VER) || _MSC_VER >= 1900)
 
 // ===================================================================
@@ -846,8 +857,11 @@ class CreateAccountWebFailure::_Internal {
   static void set_has_requestid(HasBits* has_bits) {
     (*has_bits)[0] |= 1u;
   }
+  static void set_has_returncode(HasBits* has_bits) {
+    (*has_bits)[0] |= 2u;
+  }
   static bool MissingRequiredFields(const HasBits& has_bits) {
-    return ((has_bits[0] & 0x00000001) ^ 0x00000001) != 0;
+    return ((has_bits[0] & 0x00000003) ^ 0x00000003) != 0;
   }
 };
 
@@ -864,12 +878,17 @@ CreateAccountWebFailure::CreateAccountWebFailure(const CreateAccountWebFailure& 
   : ::PROTOBUF_NAMESPACE_ID::Message(),
       _has_bits_(from._has_bits_) {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  requestid_ = from.requestid_;
+  ::memcpy(&requestid_, &from.requestid_,
+    static_cast<size_t>(reinterpret_cast<char*>(&returncode_) -
+    reinterpret_cast<char*>(&requestid_)) + sizeof(returncode_));
   // @@protoc_insertion_point(copy_constructor:tutorial.CreateAccountWebFailure)
 }
 
 void CreateAccountWebFailure::SharedCtor() {
-requestid_ = 0;
+::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
+    reinterpret_cast<char*>(&requestid_) - reinterpret_cast<char*>(this)),
+    0, static_cast<size_t>(reinterpret_cast<char*>(&returncode_) -
+    reinterpret_cast<char*>(&requestid_)) + sizeof(returncode_));
 }
 
 CreateAccountWebFailure::~CreateAccountWebFailure() {
@@ -899,7 +918,12 @@ void CreateAccountWebFailure::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  requestid_ = 0;
+  cached_has_bits = _has_bits_[0];
+  if (cached_has_bits & 0x00000003u) {
+    ::memset(&requestid_, 0, static_cast<size_t>(
+        reinterpret_cast<char*>(&returncode_) -
+        reinterpret_cast<char*>(&requestid_)) + sizeof(returncode_));
+  }
   _has_bits_.Clear();
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
@@ -917,6 +941,19 @@ const char* CreateAccountWebFailure::_InternalParse(const char* ptr, ::PROTOBUF_
           _Internal::set_has_requestid(&has_bits);
           requestid_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // required .tutorial.CreateAccountWebFailure.Reason returnCode = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 16)) {
+          ::PROTOBUF_NAMESPACE_ID::uint64 val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+          if (PROTOBUF_PREDICT_TRUE(::tutorial::CreateAccountWebFailure_Reason_IsValid(val))) {
+            _internal_set_returncode(static_cast<::tutorial::CreateAccountWebFailure_Reason>(val));
+          } else {
+            ::PROTOBUF_NAMESPACE_ID::internal::WriteVarint(2, val, mutable_unknown_fields());
+          }
         } else
           goto handle_unusual;
         continue;
@@ -957,6 +994,13 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(1, this->_internal_requestid(), target);
   }
 
+  // required .tutorial.CreateAccountWebFailure.Reason returnCode = 2;
+  if (cached_has_bits & 0x00000002u) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
+      2, this->_internal_returncode(), target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -965,13 +1009,37 @@ failure:
   return target;
 }
 
+size_t CreateAccountWebFailure::RequiredFieldsByteSizeFallback() const {
+// @@protoc_insertion_point(required_fields_byte_size_fallback_start:tutorial.CreateAccountWebFailure)
+  size_t total_size = 0;
+
+  if (_internal_has_requestid()) {
+    // required int32 requestId = 1;
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32SizePlusOne(this->_internal_requestid());
+  }
+
+  if (_internal_has_returncode()) {
+    // required .tutorial.CreateAccountWebFailure.Reason returnCode = 2;
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_returncode());
+  }
+
+  return total_size;
+}
 size_t CreateAccountWebFailure::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:tutorial.CreateAccountWebFailure)
   size_t total_size = 0;
 
-  // required int32 requestId = 1;
-  if (_internal_has_requestid()) {
+  if (((_has_bits_[0] & 0x00000003) ^ 0x00000003) == 0) {  // All required fields are present.
+    // required int32 requestId = 1;
     total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32SizePlusOne(this->_internal_requestid());
+
+    // required .tutorial.CreateAccountWebFailure.Reason returnCode = 2;
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_returncode());
+
+  } else {
+    total_size += RequiredFieldsByteSizeFallback();
   }
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
@@ -999,8 +1067,15 @@ void CreateAccountWebFailure::MergeFrom(const CreateAccountWebFailure& from) {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from._internal_has_requestid()) {
-    _internal_set_requestid(from._internal_requestid());
+  cached_has_bits = from._has_bits_[0];
+  if (cached_has_bits & 0x00000003u) {
+    if (cached_has_bits & 0x00000001u) {
+      requestid_ = from.requestid_;
+    }
+    if (cached_has_bits & 0x00000002u) {
+      returncode_ = from.returncode_;
+    }
+    _has_bits_[0] |= cached_has_bits;
   }
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -1021,7 +1096,12 @@ void CreateAccountWebFailure::InternalSwap(CreateAccountWebFailure* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   swap(_has_bits_[0], other->_has_bits_[0]);
-  swap(requestid_, other->requestid_);
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(CreateAccountWebFailure, returncode_)
+      + sizeof(CreateAccountWebFailure::returncode_)
+      - PROTOBUF_FIELD_OFFSET(CreateAccountWebFailure, requestid_)>(
+          reinterpret_cast<char*>(&requestid_),
+          reinterpret_cast<char*>(&other->requestid_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata CreateAccountWebFailure::GetMetadata() const {
@@ -1674,8 +1754,11 @@ class AuthenticateWebFailure::_Internal {
   static void set_has_requestid(HasBits* has_bits) {
     (*has_bits)[0] |= 1u;
   }
+  static void set_has_returncode(HasBits* has_bits) {
+    (*has_bits)[0] |= 2u;
+  }
   static bool MissingRequiredFields(const HasBits& has_bits) {
-    return ((has_bits[0] & 0x00000001) ^ 0x00000001) != 0;
+    return ((has_bits[0] & 0x00000003) ^ 0x00000003) != 0;
   }
 };
 
@@ -1692,12 +1775,17 @@ AuthenticateWebFailure::AuthenticateWebFailure(const AuthenticateWebFailure& fro
   : ::PROTOBUF_NAMESPACE_ID::Message(),
       _has_bits_(from._has_bits_) {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  requestid_ = from.requestid_;
+  ::memcpy(&requestid_, &from.requestid_,
+    static_cast<size_t>(reinterpret_cast<char*>(&returncode_) -
+    reinterpret_cast<char*>(&requestid_)) + sizeof(returncode_));
   // @@protoc_insertion_point(copy_constructor:tutorial.AuthenticateWebFailure)
 }
 
 void AuthenticateWebFailure::SharedCtor() {
-requestid_ = 0;
+::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
+    reinterpret_cast<char*>(&requestid_) - reinterpret_cast<char*>(this)),
+    0, static_cast<size_t>(reinterpret_cast<char*>(&returncode_) -
+    reinterpret_cast<char*>(&requestid_)) + sizeof(returncode_));
 }
 
 AuthenticateWebFailure::~AuthenticateWebFailure() {
@@ -1727,7 +1815,12 @@ void AuthenticateWebFailure::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  requestid_ = 0;
+  cached_has_bits = _has_bits_[0];
+  if (cached_has_bits & 0x00000003u) {
+    ::memset(&requestid_, 0, static_cast<size_t>(
+        reinterpret_cast<char*>(&returncode_) -
+        reinterpret_cast<char*>(&requestid_)) + sizeof(returncode_));
+  }
   _has_bits_.Clear();
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
@@ -1745,6 +1838,19 @@ const char* AuthenticateWebFailure::_InternalParse(const char* ptr, ::PROTOBUF_N
           _Internal::set_has_requestid(&has_bits);
           requestid_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // required .tutorial.AuthenticateWebFailure.Reason returnCode = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 16)) {
+          ::PROTOBUF_NAMESPACE_ID::uint64 val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+          if (PROTOBUF_PREDICT_TRUE(::tutorial::AuthenticateWebFailure_Reason_IsValid(val))) {
+            _internal_set_returncode(static_cast<::tutorial::AuthenticateWebFailure_Reason>(val));
+          } else {
+            ::PROTOBUF_NAMESPACE_ID::internal::WriteVarint(2, val, mutable_unknown_fields());
+          }
         } else
           goto handle_unusual;
         continue;
@@ -1785,6 +1891,13 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(1, this->_internal_requestid(), target);
   }
 
+  // required .tutorial.AuthenticateWebFailure.Reason returnCode = 2;
+  if (cached_has_bits & 0x00000002u) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
+      2, this->_internal_returncode(), target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -1793,13 +1906,37 @@ failure:
   return target;
 }
 
+size_t AuthenticateWebFailure::RequiredFieldsByteSizeFallback() const {
+// @@protoc_insertion_point(required_fields_byte_size_fallback_start:tutorial.AuthenticateWebFailure)
+  size_t total_size = 0;
+
+  if (_internal_has_requestid()) {
+    // required int32 requestId = 1;
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32SizePlusOne(this->_internal_requestid());
+  }
+
+  if (_internal_has_returncode()) {
+    // required .tutorial.AuthenticateWebFailure.Reason returnCode = 2;
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_returncode());
+  }
+
+  return total_size;
+}
 size_t AuthenticateWebFailure::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:tutorial.AuthenticateWebFailure)
   size_t total_size = 0;
 
-  // required int32 requestId = 1;
-  if (_internal_has_requestid()) {
+  if (((_has_bits_[0] & 0x00000003) ^ 0x00000003) == 0) {  // All required fields are present.
+    // required int32 requestId = 1;
     total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32SizePlusOne(this->_internal_requestid());
+
+    // required .tutorial.AuthenticateWebFailure.Reason returnCode = 2;
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_returncode());
+
+  } else {
+    total_size += RequiredFieldsByteSizeFallback();
   }
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
@@ -1827,8 +1964,15 @@ void AuthenticateWebFailure::MergeFrom(const AuthenticateWebFailure& from) {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from._internal_has_requestid()) {
-    _internal_set_requestid(from._internal_requestid());
+  cached_has_bits = from._has_bits_[0];
+  if (cached_has_bits & 0x00000003u) {
+    if (cached_has_bits & 0x00000001u) {
+      requestid_ = from.requestid_;
+    }
+    if (cached_has_bits & 0x00000002u) {
+      returncode_ = from.returncode_;
+    }
+    _has_bits_[0] |= cached_has_bits;
   }
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -1849,7 +1993,12 @@ void AuthenticateWebFailure::InternalSwap(AuthenticateWebFailure* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   swap(_has_bits_[0], other->_has_bits_[0]);
-  swap(requestid_, other->requestid_);
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(AuthenticateWebFailure, returncode_)
+      + sizeof(AuthenticateWebFailure::returncode_)
+      - PROTOBUF_FIELD_OFFSET(AuthenticateWebFailure, requestid_)>(
+          reinterpret_cast<char*>(&requestid_),
+          reinterpret_cast<char*>(&other->requestid_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata AuthenticateWebFailure::GetMetadata() const {
