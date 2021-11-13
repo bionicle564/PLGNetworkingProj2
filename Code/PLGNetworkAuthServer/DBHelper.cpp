@@ -1,3 +1,5 @@
+#pragma warning(disable : 4996) //disable the depricated localtime "warning", we don't need to deal with that here
+
 #include "DBHelper.h"
 
 #include <time.h>
@@ -109,22 +111,22 @@ CreateAccountWebResult DBHelper::CreateAccount(const string& email, const string
 		return CreateAccountWebResult::INTERNAL_SERVER_ERROR;
 	}
 
-	sql::Statement* stmt = m_Connection->createStatement();
+	sql::Statement* stmt2 = m_Connection->createStatement();
 	try
 	{
-		m_ResultSet = stmt->executeQuery("SELECT LAST_INSERT_ID();");
+		m_ResultSet = stmt2->executeQuery("SELECT LAST_INSERT_ID();");
 	}
 	catch (SQLException e)
 	{
 		printf("Failed to retrieve last insert id!\n");
 		return CreateAccountWebResult::INTERNAL_SERVER_ERROR;
 	}
-	int lastId = 0;
+	lastId = 0;
 	if (m_ResultSet->next())
 	{
 		lastId = m_ResultSet->getInt(1);
 	}
-	delete stmt;
+	delete stmt2;
 
 	printf("Successfully retrieved web_auth data!\n");
 	return CreateAccountWebResult::SUCCESS;
