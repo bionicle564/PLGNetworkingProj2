@@ -149,6 +149,8 @@
     <ClCompile Include="..\gen\account.pb.cc" />
     <ClCompile Include="auth_server_main.cpp" />
     <ClCompile Include="DBHelper.cpp" />
+    <ClCompile Include="SaltHasher.cpp" />
+    <ClCompile Include="SHA256.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PLGNetworkingProj1Lib\PLGNetworkingProj1Lib.vcxproj">
@@ -157,6 +159,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DBHelper.h" />
+    <ClInclude Include="SaltHasher.h" />
+    <ClInclude Include="SHA256.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
