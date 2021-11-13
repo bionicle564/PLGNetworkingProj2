@@ -10,6 +10,7 @@
 
 #include <Buffer.h>
 #include <ProtocolHelper.h>
+#include "../gen/account.pb.h"
 
 // Need to link with Ws2_32.lib
 #pragma comment (lib, "Ws2_32.lib")
@@ -271,6 +272,20 @@ int main(int argc, char** argv)
 				sProtocolData data = ProtocolMethods::ParseBuffer(ingoing);
 
 				//=====================put parsing ptrotobuffs here=================
+				if (data.type == G_AUTHENTICATE)
+				{
+					tutorial::CreateAccountWeb created;
+					if (!created.ParseFromString(data.message))
+					{
+						std::cout << "Parsing failed" << std::endl;
+					}
+					else
+					{
+						std::cout << created.requestid() << std::endl;
+						std::cout << created.email() << std::endl;
+						std::cout << created.plaintextpassword() << std::endl;
+					}
+				}
 
 
 				std::cout << "RECVd: " << received << std::endl;

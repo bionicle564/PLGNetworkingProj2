@@ -111,7 +111,7 @@ Buffer ProtocolMethods::MakeProtocol(ProtocolType type, std::string name, std::s
 		int length = tempBuf.GetWriteIndex() + 8;
 		tempBuf.writeUInt32BE(0, length);
 
-		tempBuf.writeUInt32BE(4, LOGIN_USER);
+		tempBuf.writeUInt32BE(4, REGISTER_USER);
 	}
 	else
 	{

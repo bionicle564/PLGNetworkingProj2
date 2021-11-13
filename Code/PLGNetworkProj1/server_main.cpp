@@ -27,6 +27,7 @@
 
 Buffer outgoing(DEFAULT_BUFLEN);
 Buffer ingoing(DEFAULT_BUFLEN);
+Buffer authentication(DEFAULT_BUFLEN);
 
 // Client structure
 struct ClientInfo
@@ -187,7 +188,7 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
-	result = send(connectSocket, "hi there", 9, 0); //just to see if it connects
+	//result = send(connectSocket, "hi there", 9, 0); //just to see if it connects
 
 	//===========================
 
@@ -398,7 +399,50 @@ int main(int argc, char** argv)
 				else if (data.type == REGISTER_USER)
 				{
 					//see comments above
-					outgoing = ProtocolMethods::MakeProtocol(LOGIN_USER, "Server", "yes", "Logged in succesfull");
+					//outgoing = ProtocolMethods::MakeProtocol(LOGIN_USER, "Server", "yes", "Logged in succesfull");
+					tutorial::CreateAccountWeb newAccount;
+
+					newAccount.set_requestid(1);
+					newAccount.set_email(data.userName);
+					newAccount.set_plaintextpassword(data.room);
+
+					std::string serialized;
+					newAccount.SerializeToString(&serialized);
+
+					authentication = ProtocolMethods::MakeProtocol(G_AUTHENTICATE, "", "", serialized);
+
+					char* payload = authentication.PayloadToString();
+					WSABUF buf;
+					buf.buf = payload;
+					buf.len = authentication.readUInt32BE(0);
+					
+					iResult = WSASend(
+						connectSocket,
+						&(buf),
+						1,
+						&SentBytes,
+						Flags,
+						NULL,
+						NULL
+					);
+
+					// Example using send instead of WSASend...
+					//int iSendResult = send(client->socket, client->dataBuf.buf, iResult, 0);
+
+					if (SentBytes == SOCKET_ERROR)
+					{
+						printf("send error %d\n", WSAGetLastError());
+					}
+					else if (SentBytes == 0)
+					{
+						printf("Send result is 0\n");
+					}
+					else
+					{
+						printf("Successfully sent %d bytes!\n", SentBytes);
+					}
+					
+					delete[] payload; //clean the payload
 				}
 
 				
