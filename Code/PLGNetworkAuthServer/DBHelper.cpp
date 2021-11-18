@@ -166,6 +166,12 @@ DatabaseResponse DBHelper::LoginUser(const string& email, const string& password
 		return reponse;
 	}
 
+	if (!m_ResultSet->next())
+	{
+		reponse.result = DatabaseReturnCode::INTERNAL_SERVER_ERROR;
+		return reponse;
+	}
+
 	std::string retrievedPassword = m_ResultSet->getString("hash_password");
 	
 	//we gotta encode the passed password to see if it matches

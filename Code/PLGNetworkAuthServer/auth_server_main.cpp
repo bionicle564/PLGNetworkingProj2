@@ -352,6 +352,7 @@ int main(int argc, char** argv)
 
 								successResponse.set_requestid(login.requestid());
 								successResponse.set_userid(response.userId);
+								successResponse.set_creationdate(response.date);
 
 								std::string successString;
 								successResponse.SerializeToString(&successString);
