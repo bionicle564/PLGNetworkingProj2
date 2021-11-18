@@ -4,6 +4,8 @@
 
 #include <string>
 
+#include "SaltHasher.h"
+
 using namespace sql;
 
 using std::string;
@@ -41,6 +43,8 @@ public:
 	bool LoginUser(const string& email, const string& password);
 
 private:
+	SaltHasher saltHash;
+
 	void GeneratePreparedStatements(void);
 
 	mysql::MySQL_Driver* m_Driver;

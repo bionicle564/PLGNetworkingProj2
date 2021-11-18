@@ -163,8 +163,13 @@ bool DBHelper::LoginUser(const string& email, const string& password) {
 	}
 
 	std::string retrievedPassword = m_ResultSet->getString("hash_password");
-	//!SOMETHING MIGHT NEED TO BE DONE HERE?
-	if (retrievedPassword != password) {
+	
+	//we gotta encode the passed password to see if it matches
+	std::string salt = m_ResultSet->getString("salt");
+	std::string saltyPassword = salt + password;
+	std::string hashedPassword = saltHash.HashPassword(saltyPassword);
+
+	if (retrievedPassword != hashedPassword) {
 		printf("PASSWORD MISMATCH!\n");
 		return false;
 	}
