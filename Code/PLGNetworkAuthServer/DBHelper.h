@@ -10,17 +10,18 @@ using namespace sql;
 
 using std::string;
 
-enum CreateAccountWebResult
+enum DatabaseReturnCode
 {
 	SUCCESS,
 	ACCOUNT_ALREADY_EXISTS,
 	INVALID_PASSWORD,
-	INTERNAL_SERVER_ERROR
+	INTERNAL_SERVER_ERROR,
+	INVALID_CREDENTIAL
 };
 
 struct DatabaseResponse
 {
-	CreateAccountWebResult result;
+	DatabaseReturnCode result;
 	std::string date;
 	int userId;
 };
@@ -40,7 +41,7 @@ public:
 	// INSERT = sql::Statement::execute()
 
 	DatabaseResponse CreateAccount(const string& email, const string& password, const string& salt);
-	bool LoginUser(const string& email, const string& password);
+	DatabaseResponse LoginUser(const string& email, const string& password);
 
 private:
 	SaltHasher saltHash;

@@ -297,13 +297,13 @@ int main(int argc, char** argv)
 
 						if (db.IsConnected())
 						{
-							DatabaseResponse result = db.CreateAccount(email, hashedPassword, salt);
-							if (result.result == CreateAccountWebResult::SUCCESS)
+							DatabaseResponse response = db.CreateAccount(email, hashedPassword, salt);
+							if (response.result == DatabaseReturnCode::SUCCESS)
 							{
 								tutorial::CreateAccountWebSuccess successResponse;
 
 								successResponse.set_requestid(created.requestid());
-								successResponse.set_userid(result.userId);
+								successResponse.set_userid(response.userId);
 
 								std::string successString;
 								successResponse.SerializeToString(&successString);
@@ -316,12 +316,10 @@ int main(int argc, char** argv)
 
 								failureResponse.set_requestid(created.requestid());
 
-								if (result.result == CreateAccountWebResult::ACCOUNT_ALREADY_EXISTS)
+								if (response.result == DatabaseReturnCode::ACCOUNT_ALREADY_EXISTS)
 									failureResponse.set_returncode(tutorial::CreateAccountWebFailure::ACCOUNT_ALREADY_EXISTS);
-								else if (result.result == CreateAccountWebResult::INTERNAL_SERVER_ERROR)
+								else if (response.result == DatabaseReturnCode::INTERNAL_SERVER_ERROR)
 									failureResponse.set_returncode(tutorial::CreateAccountWebFailure::INTERNAL_SERVER_ERROR);
-								else if (result.result == CreateAccountWebResult::INVALID_PASSWORD)
-									failureResponse.set_returncode(tutorial::CreateAccountWebFailure::INVALID_PASSWORD);
 
 								std::string failureString;
 								failureResponse.SerializeToString(&failureString);
@@ -347,9 +345,36 @@ int main(int argc, char** argv)
 						// sql call
 						if (db.IsConnected())
 						{
-							if (db.LoginUser(email, password))
+							DatabaseResponse response = db.LoginUser(email, password);
+							if (response.result == DatabaseReturnCode::SUCCESS)
 							{
-								int i = 0;
+								tutorial::AuthenticateWebSuccess successResponse;
+
+								successResponse.set_requestid(login.requestid());
+								successResponse.set_userid(response.userId);
+
+								std::string successString;
+								successResponse.SerializeToString(&successString);
+
+								outgoing = ProtocolMethods::MakeProtocol(G_AUTHENTICATE_SUCCESS, "", "", successString);
+							}
+							else
+							{
+								tutorial::AuthenticateWebFailure failureResponse;
+
+								failureResponse.set_requestid(login.requestid());
+
+								if (response.result == DatabaseReturnCode::INVALID_PASSWORD)
+									failureResponse.set_returncode(tutorial::AuthenticateWebFailure::INVALID_PASSWORD);
+								else if (response.result == DatabaseReturnCode::INVALID_CREDENTIAL)
+									failureResponse.set_returncode(tutorial::AuthenticateWebFailure::INVALID_CREDENTIALS);
+								else if (response.result == DatabaseReturnCode::INTERNAL_SERVER_ERROR)
+									failureResponse.set_returncode(tutorial::AuthenticateWebFailure::INTERNAL_SERVER_ERROR);
+
+								std::string failureString;
+								failureResponse.SerializeToString(&failureString);
+
+								outgoing = ProtocolMethods::MakeProtocol(G_AUTHENTICATE_FAILURE, "", "", failureString);
 							}
 						}
 					}

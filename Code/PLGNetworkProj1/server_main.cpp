@@ -608,15 +608,104 @@ int main(int argc, char** argv)
 			}
 			else if (data.type == G_CREATE_ACCOUNT_FAILURE)
 			{
+				tutorial::CreateAccountWebFailure createFailure;
 
+				if (!createFailure.ParseFromString(data.message))
+				{
+					std::cout << "Parsing failed" << std::endl;
+				}
+				else
+				{
+					if (createFailure.returncode() == tutorial::CreateAccountWebFailure::ACCOUNT_ALREADY_EXISTS)
+						outgoing = ProtocolMethods::MakeProtocol(G_CREATE_ACCOUNT_FAILURE, "", "", "ACCOUNT_ALREADY_EXISTS");
+					else if (createFailure.returncode() == tutorial::CreateAccountWebFailure::INTERNAL_SERVER_ERROR)
+						outgoing = ProtocolMethods::MakeProtocol(G_CREATE_ACCOUNT_FAILURE, "", "", "INTERNAL_SERVER_ERROR");
+
+					char* payload = outgoing.PayloadToString();
+					WSABUF buf;
+					buf.buf = payload;
+					buf.len = outgoing.readUInt32BE(0);
+
+					DWORD Flags = 0;
+					iResult = WSASend(
+						ClientArray[createFailure.requestid()]->socket, // CHANGE TO CLIENT SOCKET
+						&(buf),
+						1,
+						&SentBytes,
+						Flags,
+						NULL,
+						NULL
+					);
+
+					delete[] payload;
+				}
 			}
 			else if (data.type == G_AUTHENTICATE_SUCCESS)
 			{
+				tutorial::CreateAccountWebSuccess authenticateSuccess;
 
+				if (!authenticateSuccess.ParseFromString(data.message))
+				{
+					std::cout << "Parsing failed" << std::endl;
+				}
+				else
+				{
+					outgoing = ProtocolMethods::MakeProtocol(G_AUTHENTICATE_SUCCESS, "", "", data.message);
+
+					char* payload = outgoing.PayloadToString();
+					WSABUF buf;
+					buf.buf = payload;
+					buf.len = outgoing.readUInt32BE(0);
+
+					DWORD Flags = 0;
+					iResult = WSASend(
+						ClientArray[authenticateSuccess.requestid()]->socket, // CHANGE TO CLIENT SOCKET
+						&(buf),
+						1,
+						&SentBytes,
+						Flags,
+						NULL,
+						NULL
+					);
+
+					delete[] payload;
+				}
 			}
 			else if (data.type == G_AUTHENTICATE_FAILURE)
 			{
+				tutorial::CreateAccountWebFailure authenticateFailure;
 
+				if (!authenticateFailure.ParseFromString(data.message))
+				{
+					std::cout << "Parsing failed" << std::endl;
+				}
+				else
+				{
+					if (authenticateFailure.returncode() == tutorial::AuthenticateWebFailure::INTERNAL_SERVER_ERROR)
+						outgoing = ProtocolMethods::MakeProtocol(G_AUTHENTICATE_FAILURE, "", "", "INTERNAL_SERVER_ERROR");
+					else if (authenticateFailure.returncode() == tutorial::AuthenticateWebFailure::INVALID_CREDENTIALS)
+						outgoing = ProtocolMethods::MakeProtocol(G_AUTHENTICATE_FAILURE, "", "", "INVALID_CREDENTIALS");
+					else if (authenticateFailure.returncode() == tutorial::AuthenticateWebFailure::INVALID_PASSWORD)
+						outgoing = ProtocolMethods::MakeProtocol(G_AUTHENTICATE_FAILURE, "", "", "INVALID_PASSWORD");
+
+					char* payload = outgoing.PayloadToString();
+					WSABUF buf;
+					buf.buf = payload;
+					buf.len = outgoing.readUInt32BE(0);
+
+					DWORD Flags = 0;
+					iResult = WSASend(
+						ClientArray[authenticateFailure.requestid()]->socket, // CHANGE TO CLIENT SOCKET
+						&(buf),
+						1,
+						&SentBytes,
+						Flags,
+						NULL,
+						NULL
+					);
+
+					delete[] payload;
+				}
 			}
 
 		}

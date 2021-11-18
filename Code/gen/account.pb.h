@@ -88,8 +88,7 @@ namespace tutorial {
 
 enum CreateAccountWebFailure_Reason : int {
   CreateAccountWebFailure_Reason_ACCOUNT_ALREADY_EXISTS = 0,
-  CreateAccountWebFailure_Reason_INVALID_PASSWORD = 1,
-  CreateAccountWebFailure_Reason_INTERNAL_SERVER_ERROR = 2
+  CreateAccountWebFailure_Reason_INTERNAL_SERVER_ERROR = 1
 };
 bool CreateAccountWebFailure_Reason_IsValid(int value);
 constexpr CreateAccountWebFailure_Reason CreateAccountWebFailure_Reason_Reason_MIN = CreateAccountWebFailure_Reason_ACCOUNT_ALREADY_EXISTS;
@@ -112,11 +111,12 @@ inline bool CreateAccountWebFailure_Reason_Parse(
 }
 enum AuthenticateWebFailure_Reason : int {
   AuthenticateWebFailure_Reason_INVALID_CREDENTIALS = 0,
-  AuthenticateWebFailure_Reason_INTERNAL_SERVER_ERROR = 1
+  AuthenticateWebFailure_Reason_INTERNAL_SERVER_ERROR = 1,
+  AuthenticateWebFailure_Reason_INVALID_PASSWORD = 2
 };
 bool AuthenticateWebFailure_Reason_IsValid(int value);
 constexpr AuthenticateWebFailure_Reason AuthenticateWebFailure_Reason_Reason_MIN = AuthenticateWebFailure_Reason_INVALID_CREDENTIALS;
-constexpr AuthenticateWebFailure_Reason AuthenticateWebFailure_Reason_Reason_MAX = AuthenticateWebFailure_Reason_INTERNAL_SERVER_ERROR;
+constexpr AuthenticateWebFailure_Reason AuthenticateWebFailure_Reason_Reason_MAX = AuthenticateWebFailure_Reason_INVALID_PASSWORD;
 constexpr int AuthenticateWebFailure_Reason_Reason_ARRAYSIZE = AuthenticateWebFailure_Reason_Reason_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* AuthenticateWebFailure_Reason_descriptor();
@@ -632,8 +632,6 @@ class CreateAccountWebFailure final :
   typedef CreateAccountWebFailure_Reason Reason;
   static constexpr Reason ACCOUNT_ALREADY_EXISTS =
     CreateAccountWebFailure_Reason_ACCOUNT_ALREADY_EXISTS;
-  static constexpr Reason INVALID_PASSWORD =
-    CreateAccountWebFailure_Reason_INVALID_PASSWORD;
   static constexpr Reason INTERNAL_SERVER_ERROR =
     CreateAccountWebFailure_Reason_INTERNAL_SERVER_ERROR;
   static inline bool Reason_IsValid(int value) {
@@ -1230,6 +1228,8 @@ class AuthenticateWebFailure final :
     AuthenticateWebFailure_Reason_INVALID_CREDENTIALS;
   static constexpr Reason INTERNAL_SERVER_ERROR =
     AuthenticateWebFailure_Reason_INTERNAL_SERVER_ERROR;
+  static constexpr Reason INVALID_PASSWORD =
+    AuthenticateWebFailure_Reason_INVALID_PASSWORD;
   static inline bool Reason_IsValid(int value) {
     return AuthenticateWebFailure_Reason_IsValid(value);
   }

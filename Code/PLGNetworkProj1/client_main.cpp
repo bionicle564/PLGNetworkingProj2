@@ -383,15 +383,27 @@ int main(int argc, char **argv)
 				}
 				else if (data.type == G_CREATE_ACCOUNT_FAILURE)
 				{
+					std::cout << "Account creating failed: ";
 
+					if (data.message == "ACCOUNT_ALREADY_EXISTS")
+						std::cout << "Account already exists" << std::endl;
+					else if (data.message == "INTERNAL_SERVER_ERROR")
+						std::cout << "Internal server error" << std::endl;
 				}
 				else if (data.type == G_AUTHENTICATE_SUCCESS)
 				{
-
+					std::cout << "Logged in" << std::endl;
 				}
 				else if (data.type == G_AUTHENTICATE_FAILURE)
 				{
+					std::cout << "Logging in failed: ";
 
+					if (data.message == "INVALID_CREDENTIALS")
+						std::cout << "User doesnt exist" << std::endl;
+					else if (data.message == "INVALID_PASSWORD")
+						std::cout << "Password incorect" << std::endl;
+					else if (data.message == "INTERNAL_SERVER_ERROR")
+						std::cout << "Internal server error" << std::endl;
 				}
 				else
 				{

@@ -49,14 +49,14 @@ DatabaseResponse DBHelper::CreateAccount(const string& email, const string& pass
 	catch (SQLException e)
 	{
 		printf("Failed to retrieved web_auth data!\n");
-		reponse.result = CreateAccountWebResult::INTERNAL_SERVER_ERROR;
+		reponse.result = DatabaseReturnCode::INTERNAL_SERVER_ERROR;
 		return reponse;
 	}
 
 	if (m_ResultSet->rowsCount() > 0)
 	{
 		printf("Account already exists with email!\n");
-		reponse.result = CreateAccountWebResult::ACCOUNT_ALREADY_EXISTS;
+		reponse.result = DatabaseReturnCode::ACCOUNT_ALREADY_EXISTS;
 		return reponse;
 	}
 
@@ -73,7 +73,7 @@ DatabaseResponse DBHelper::CreateAccount(const string& email, const string& pass
 	catch (SQLException e)
 	{
 		printf("Failed to insert account into web_auth!\n");
-		reponse.result = CreateAccountWebResult::INTERNAL_SERVER_ERROR;
+		reponse.result = DatabaseReturnCode::INTERNAL_SERVER_ERROR;
 		return reponse;
 	}
 
@@ -86,7 +86,7 @@ DatabaseResponse DBHelper::CreateAccount(const string& email, const string& pass
 	catch (SQLException e)
 	{
 		printf("Failed to retrieve last insert id!\n");
-		reponse.result = CreateAccountWebResult::INTERNAL_SERVER_ERROR;
+		reponse.result = DatabaseReturnCode::INTERNAL_SERVER_ERROR;
 		return reponse;
 	}
 	int lastId = 0;
@@ -115,7 +115,7 @@ DatabaseResponse DBHelper::CreateAccount(const string& email, const string& pass
 	catch (SQLException e)
 	{
 		printf("Failed to insert account into web_auth!\n");
-		reponse.result = CreateAccountWebResult::INTERNAL_SERVER_ERROR;
+		reponse.result = DatabaseReturnCode::INTERNAL_SERVER_ERROR;
 		return reponse;
 	}
 
@@ -127,7 +127,7 @@ DatabaseResponse DBHelper::CreateAccount(const string& email, const string& pass
 	catch (SQLException e)
 	{
 		printf("Failed to retrieve last insert id!\n");
-		reponse.result = CreateAccountWebResult::INTERNAL_SERVER_ERROR;
+		reponse.result = DatabaseReturnCode::INTERNAL_SERVER_ERROR;
 		return reponse;
 	}
 	lastId = 0;
@@ -139,11 +139,13 @@ DatabaseResponse DBHelper::CreateAccount(const string& email, const string& pass
 	delete stmt2;
 
 	printf("Successfully retrieved web_auth data!\n");
-	reponse.result = CreateAccountWebResult::SUCCESS;
+	reponse.result = DatabaseReturnCode::SUCCESS;
 	return reponse;
 }
 
-bool DBHelper::LoginUser(const string& email, const string& password) {
+DatabaseResponse DBHelper::LoginUser(const string& email, const string& password) {
+
+	DatabaseResponse reponse;
 
 	g_GetEmails->setString(1, email);
 	try
@@ -153,13 +155,15 @@ bool DBHelper::LoginUser(const string& email, const string& password) {
 	catch (SQLException e)
 	{
 		printf("Failed to retrieved web_auth data!\n");
-		return false;
+		reponse.result = DatabaseReturnCode::INTERNAL_SERVER_ERROR;
+		return reponse;
 	}
 
 	if (m_ResultSet->rowsCount() == 0)
 	{
 		printf("No such Account exists!\n");
-		return false;
+		reponse.result = DatabaseReturnCode::INVALID_CREDENTIAL;
+		return reponse;
 	}
 
 	std::string retrievedPassword = m_ResultSet->getString("hash_password");
@@ -171,10 +175,12 @@ bool DBHelper::LoginUser(const string& email, const string& password) {
 
 	if (retrievedPassword != hashedPassword) {
 		printf("PASSWORD MISMATCH!\n");
-		return false;
+		reponse.result = DatabaseReturnCode::INVALID_PASSWORD;
+		return reponse;
 	}
 
 	std::string nowAsDateTime = GetTimeInDateTimeFormat();
+	reponse.date = nowAsDateTime;
 
 	//update the login time
 	try {
@@ -184,10 +190,12 @@ bool DBHelper::LoginUser(const string& email, const string& password) {
 	}catch (SQLException e)
 	{
 		printf("Failed to update login data!\n");
-		return false;
+		reponse.result = DatabaseReturnCode::INTERNAL_SERVER_ERROR;
+		return reponse;
 	}
 
-	return true;
+	reponse.result = DatabaseReturnCode::SUCCESS;
+	return reponse;
 }
 
 void DBHelper::GeneratePreparedStatements(void)

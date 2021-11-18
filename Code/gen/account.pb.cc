@@ -196,20 +196,20 @@ const char descriptor_table_protodef_account_2eproto[] PROTOBUF_SECTION_VARIABLE
   "ntWeb\022\021\n\trequestId\030\001 \002(\005\022\r\n\005email\030\002 \002(\t\022"
   "\031\n\021plaintextPassword\030\003 \002(\t\"<\n\027CreateAcco"
   "untWebSuccess\022\021\n\trequestId\030\001 \002(\005\022\016\n\006user"
-  "Id\030\002 \002(\005\"\301\001\n\027CreateAccountWebFailure\022\021\n\t"
+  "Id\030\002 \002(\005\"\253\001\n\027CreateAccountWebFailure\022\021\n\t"
   "requestId\030\001 \002(\005\022<\n\nreturnCode\030\002 \002(\0162(.tu"
-  "torial.CreateAccountWebFailure.Reason\"U\n"
-  "\006Reason\022\032\n\026ACCOUNT_ALREADY_EXISTS\020\000\022\024\n\020I"
-  "NVALID_PASSWORD\020\001\022\031\n\025INTERNAL_SERVER_ERR"
-  "OR\020\002\"N\n\017AuthenticateWeb\022\021\n\trequestId\030\001 \002"
-  "(\005\022\r\n\005email\030\002 \002(\t\022\031\n\021plaintextPassword\030\003"
-  " \002(\t\"Q\n\026AuthenticateWebSuccess\022\021\n\treques"
-  "tId\030\001 \002(\005\022\016\n\006userId\030\002 \002(\005\022\024\n\014creationDat"
-  "e\030\003 \002(\t\"\246\001\n\026AuthenticateWebFailure\022\021\n\tre"
-  "questId\030\001 \002(\005\022;\n\nreturnCode\030\002 \002(\0162\'.tuto"
-  "rial.AuthenticateWebFailure.Reason\"<\n\006Re"
-  "ason\022\027\n\023INVALID_CREDENTIALS\020\000\022\031\n\025INTERNA"
-  "L_SERVER_ERROR\020\001"
+  "torial.CreateAccountWebFailure.Reason\"\?\n"
+  "\006Reason\022\032\n\026ACCOUNT_ALREADY_EXISTS\020\000\022\031\n\025I"
+  "NTERNAL_SERVER_ERROR\020\001\"N\n\017AuthenticateWe"
+  "b\022\021\n\trequestId\030\001 \002(\005\022\r\n\005email\030\002 \002(\t\022\031\n\021p"
+  "laintextPassword\030\003 \002(\t\"Q\n\026AuthenticateWe"
+  "bSuccess\022\021\n\trequestId\030\001 \002(\005\022\016\n\006userId\030\002 "
+  "\002(\005\022\024\n\014creationDate\030\003 \002(\t\"\274\001\n\026Authentica"
+  "teWebFailure\022\021\n\trequestId\030\001 \002(\005\022;\n\nretur"
+  "nCode\030\002 \002(\0162\'.tutorial.AuthenticateWebFa"
+  "ilure.Reason\"R\n\006Reason\022\027\n\023INVALID_CREDEN"
+  "TIALS\020\000\022\031\n\025INTERNAL_SERVER_ERROR\020\001\022\024\n\020IN"
+  "VALID_PASSWORD\020\002"
   ;
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_account_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_account_2eproto = {
@@ -233,7 +233,6 @@ bool CreateAccountWebFailure_Reason_IsValid(int value) {
   switch (value) {
     case 0:
     case 1:
-    case 2:
       return true;
     default:
       return false;
@@ -242,7 +241,6 @@ bool CreateAccountWebFailure_Reason_IsValid(int value) {
 
 #if (__cplusplus < 201703) && (!defined(_MSC_VER) || _MSC_VER >= 1900)
 constexpr CreateAccountWebFailure_Reason CreateAccountWebFailure::ACCOUNT_ALREADY_EXISTS;
-constexpr CreateAccountWebFailure_Reason CreateAccountWebFailure::INVALID_PASSWORD;
 constexpr CreateAccountWebFailure_Reason CreateAccountWebFailure::INTERNAL_SERVER_ERROR;
 constexpr CreateAccountWebFailure_Reason CreateAccountWebFailure::Reason_MIN;
 constexpr CreateAccountWebFailure_Reason CreateAccountWebFailure::Reason_MAX;
@@ -256,6 +254,7 @@ bool AuthenticateWebFailure_Reason_IsValid(int value) {
   switch (value) {
     case 0:
     case 1:
+    case 2:
       return true;
     default:
       return false;
@@ -265,6 +264,7 @@ bool AuthenticateWebFailure_Reason_IsValid(int value) {
 #if (__cplusplus < 201703) && (!defined(_MSC_VER) || _MSC_VER >= 1900)
 constexpr AuthenticateWebFailure_Reason AuthenticateWebFailure::INVALID_CREDENTIALS;
 constexpr AuthenticateWebFailure_Reason AuthenticateWebFailure::INTERNAL_SERVER_ERROR;
+constexpr AuthenticateWebFailure_Reason AuthenticateWebFailure::INVALID_PASSWORD;
 constexpr AuthenticateWebFailure_Reason AuthenticateWebFailure::Reason_MIN;
 constexpr AuthenticateWebFailure_Reason AuthenticateWebFailure::Reason_MAX;
 constexpr int AuthenticateWebFailure::Reason_ARRAYSIZE;
