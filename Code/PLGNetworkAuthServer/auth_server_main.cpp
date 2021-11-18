@@ -302,19 +302,19 @@ int main(int argc, char** argv)
 							{
 								tutorial::CreateAccountWebSuccess successResponse;
 
-								successResponse.set_requestid(1);
+								successResponse.set_requestid(created.requestid());
 								successResponse.set_userid(result.userId);
 
 								std::string successString;
 								successResponse.SerializeToString(&successString);
 
-								outgoing = ProtocolMethods::MakeProtocol(G_AUTHENTICATE_SUCCESS, "", "", successString);
+								outgoing = ProtocolMethods::MakeProtocol(G_CREATE_ACCOUNT_SUCCESS, "", "", successString);
 							}
 							else
 							{
 								tutorial::CreateAccountWebFailure failureResponse;
 
-								failureResponse.set_requestid(1);
+								failureResponse.set_requestid(created.requestid());
 
 								if (result.result == CreateAccountWebResult::ACCOUNT_ALREADY_EXISTS)
 									failureResponse.set_returncode(tutorial::CreateAccountWebFailure::ACCOUNT_ALREADY_EXISTS);
@@ -326,7 +326,7 @@ int main(int argc, char** argv)
 								std::string failureString;
 								failureResponse.SerializeToString(&failureString);
 
-								outgoing = ProtocolMethods::MakeProtocol(G_AUTHENTICATE_FAILURE, "", "", failureString);
+								outgoing = ProtocolMethods::MakeProtocol(G_CREATE_ACCOUNT_FAILURE, "", "", failureString);
 							}
 						}
 					}					

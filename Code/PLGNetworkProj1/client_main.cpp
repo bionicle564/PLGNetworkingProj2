@@ -377,10 +377,24 @@ int main(int argc, char **argv)
 					chatlog.push_back("<Authentication> " + data.userName + ":\t" + data.message);
 					updateLog = true;
 				}
-				else
+				else if (data.type == G_CREATE_ACCOUNT_SUCCESS)
+				{
+					std::cout << "Account created" << std::endl;
+				}
+				else if (data.type == G_CREATE_ACCOUNT_FAILURE)
 				{
 
+				}
+				else if (data.type == G_AUTHENTICATE_SUCCESS)
+				{
 
+				}
+				else if (data.type == G_AUTHENTICATE_FAILURE)
+				{
+
+				}
+				else
+				{
 					//if it comes from a room that we're in, add it to the chat log
 					system("cls"); //supposedly this isn't a safe thing to do, but I'm pretty sure LG showed it in class
 					for (int i = 0; i < rooms.size(); i++)

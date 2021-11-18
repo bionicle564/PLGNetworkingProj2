@@ -29,6 +29,9 @@ Buffer outgoing(DEFAULT_BUFLEN);
 Buffer ingoing(DEFAULT_BUFLEN);
 Buffer authentication(DEFAULT_BUFLEN);
 
+char recvbuf[DEFAULT_BUFLEN];
+int recvbuflen = DEFAULT_BUFLEN;
+
 // Client structure
 struct ClientInfo
 {
@@ -64,7 +67,7 @@ void RemoveClient(int index)
 int main(int argc, char** argv)
 {
 	WSADATA wsaData;
-	SOCKET connectSocket = INVALID_SOCKET;
+	SOCKET authenticationSocket = INVALID_SOCKET;
 
 	struct addrinfo* infoResult = NULL;
 	struct addrinfo* ptr = NULL;
@@ -150,9 +153,9 @@ int main(int argc, char** argv)
 	for (ptr = infoResult; ptr != NULL; ptr = ptr->ai_next)
 	{
 		// Create a SOCKET for connecting to server
-		connectSocket = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
+		authenticationSocket = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
 
-		if (connectSocket == INVALID_SOCKET)
+		if (authenticationSocket == INVALID_SOCKET)
 		{
 			printf("socket failed with error: %ld\n", WSAGetLastError());
 			WSACleanup();
@@ -161,15 +164,15 @@ int main(int argc, char** argv)
 
 
 		// Connect to server.
-		result = connect(connectSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
+		result = connect(authenticationSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
 		if (result == SOCKET_ERROR)
 		{
-			closesocket(connectSocket);
-			connectSocket = INVALID_SOCKET;
+			closesocket(authenticationSocket);
+			authenticationSocket = INVALID_SOCKET;
 			continue;
 		}
 
-		result = ioctlsocket(connectSocket, FIONBIO, &mode);
+		result = ioctlsocket(authenticationSocket, FIONBIO, &mode);
 		if (result != NO_ERROR)
 		{
 			printf("ioctlsocket failed with error: %ld\n", result);
@@ -181,14 +184,14 @@ int main(int argc, char** argv)
 
 	freeaddrinfo(infoResult);
 
-	if (connectSocket == INVALID_SOCKET)
+	if (authenticationSocket == INVALID_SOCKET)
 	{
 		printf("Unable to connect to server!\n");
 		WSACleanup();
 		return 1;
 	}
 
-	//result = send(connectSocket, "hi there", 9, 0); //just to see if it connects
+	//result = send(authenticationSocket, "hi there", 9, 0); //just to see if it connects
 
 	//===========================
 
@@ -373,7 +376,6 @@ int main(int argc, char** argv)
 				if (data.type == JOIN_ROOM)
 				{
 					outgoing = ProtocolMethods::MakeProtocol(RECV_MESSAGE, "Server", data.room, data.message);
-
 				}
 				else if (data.type == SEND_MESSAGE)
 				{
@@ -387,7 +389,7 @@ int main(int argc, char** argv)
 				{
 					//send data to auth server with g-protocols
 					// for now, just reply saying they logged in
-					//send(connectSocket, "hi there", 9, 0);
+					//send(authenticationSocket, "hi there", 9, 0);
 
 					//data: username	-> the name they will use to sign in
 					//		room		-> the password they will use 
@@ -397,7 +399,7 @@ int main(int argc, char** argv)
 					
 					tutorial::AuthenticateWeb userLogin;
 
-					userLogin.set_requestid(1);
+					userLogin.set_requestid(i);
 					userLogin.set_email(data.userName);
 					userLogin.set_plaintextpassword(data.room);
 
@@ -412,7 +414,7 @@ int main(int argc, char** argv)
 					buf.len = authentication.readUInt32BE(0);
 
 					iResult = WSASend(
-						connectSocket,
+						authenticationSocket,
 						&(buf),
 						1,
 						&SentBytes,
@@ -445,7 +447,7 @@ int main(int argc, char** argv)
 					//outgoing = ProtocolMethods::MakeProtocol(LOGIN_USER, "Server", "yes", "Logged in succesfull");
 					tutorial::CreateAccountWeb newAccount;
 
-					newAccount.set_requestid(1);
+					newAccount.set_requestid(i);
 					newAccount.set_email(data.userName);
 					newAccount.set_plaintextpassword(data.room);
 
@@ -460,7 +462,7 @@ int main(int argc, char** argv)
 					buf.len = authentication.readUInt32BE(0);
 					
 					iResult = WSASend(
-						connectSocket,
+						authenticationSocket,
 						&(buf),
 						1,
 						&SentBytes,
@@ -553,6 +555,83 @@ int main(int argc, char** argv)
 						delete[] payload; //clean the payload
 					}
 				}
+			}
+		}
+
+		result = recv(authenticationSocket, recvbuf, recvbuflen, 0);
+		if (result > 0)
+		{
+
+			//get the inbound message, and put it in the buffer
+			printf("Bytes received: %d\n", result);
+			std::string received = "";
+			for (int i = 0; i < recvbuflen; i++) {
+				received.push_back(recvbuf[i]);
+			}
+
+			ingoing.LoadBuffer(received);
+
+			//Parse the data in the buffer
+
+			sProtocolData data = ProtocolMethods::ParseBuffer(ingoing);
+			
+			if (data.type == G_CREATE_ACCOUNT_SUCCESS)
+			{
+				tutorial::CreateAccountWebSuccess createSuccess;
+
+				if (!createSuccess.ParseFromString(data.message))
+				{
+					std::cout << "Parsing failed" << std::endl;
+				}
+				else
+				{
+					outgoing = ProtocolMethods::MakeProtocol(G_CREATE_ACCOUNT_SUCCESS, "", "", data.message);
+
+					char* payload = outgoing.PayloadToString();
+					WSABUF buf;
+					buf.buf = payload;
+					buf.len = outgoing.readUInt32BE(0);
+
+					DWORD Flags = 0;
+					iResult = WSASend(
+						ClientArray[createSuccess.requestid()]->socket, // CHANGE TO CLIENT SOCKET
+						&(buf),
+						1,
+						&SentBytes,
+						Flags,
+						NULL,
+						NULL
+					);
+
+					delete[] payload;
+				}
+			}
+			else if (data.type == G_CREATE_ACCOUNT_FAILURE)
+			{
+
+			}
+			else if (data.type == G_AUTHENTICATE_SUCCESS)
+			{
+
+			}
+			else if (data.type == G_AUTHENTICATE_FAILURE)
+			{
+
+			}
+
+		}
+		else if (result == 0)
+		{
+			//if we've left
+			printf("Connection closed\n");
+		}
+		else
+		{
+			if (WSAGetLastError() == 10035) {
+				//this error isn't actually bad, it just means we've not received anything
+			}
+			else {
+				printf("Message error happend, opps. time to exit");
 			}
 		}
 	}
