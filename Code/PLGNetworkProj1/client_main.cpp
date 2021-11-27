@@ -157,112 +157,151 @@ int main(int argc, char **argv)
 	bool loggedIn = false;
 	bool loginMessage = true;
 
+	bool loggingIn = false;
+
 	while (!quit) {
+		if (!loggingIn)
+		{
+			//get keyboard input
+			if (_kbhit())
+			{
+				char key = _getch();
 
-		//get keyboard input
-		if (_kbhit()) {
-			char key = _getch();
-
-			if (key == 27) { //esc to quit
-				quit = true;
-			}else if (key == 8) { //back to remove
-				if (message.length() != 0)
-				{
-					message.pop_back();
-					system("cls"); //supposedly this isn't a safe thing to do, but I'm pretty sure LG showed it in class
-					updateLog = true;
+				if (key == 27)
+				{ //esc to quit
+					quit = true;
 				}
-			}
-			else if (key == 13) { // enter to send
-
-				helpRequested = false; //remove the help
-				
-				if (message[0] == '/') // is a command
-				{
-					size_t pos = message.find(" ");
-					std::string command = message.substr(0, pos);
-					message.erase(0, pos + 1);
-
-					if (command == "/help" || command == "/h") {
-						helpRequested = true;
-						updateLog;
-					}else if (command == "/join" || command == "/j" && loggedIn)
+				else if (key == 8)
+				{ //back to remove
+					if (message.length() != 0)
 					{
-						if (std::count(rooms.begin(), rooms.end(), message))
-						{
-							chatlog.push_back("You are already in the room " + message);
-						}
-						else
-						{
-							//assemble the protocol
-							outgoing = ProtocolMethods::MakeProtocol(JOIN_ROOM, username, message, "");//this has no inherent message
-							sProtocolData data = ProtocolMethods::ParseBuffer(outgoing);
-
-							//change it to a format we can transport
-							char* payload = outgoing.PayloadToString();
-							//send it
-							result = send(connectSocket, payload, outgoing.readUInt32BE(0), 0);
-							if (result == SOCKET_ERROR)
-							{
-								printf("send failed with error: %d\n", WSAGetLastError());
-								closesocket(connectSocket);
-								WSACleanup();
-								return 1;
-							}
-
-							rooms.push_back(message);
-
-							//clean up
-							delete[] payload;
-							printf("Bytes Sent: %ld\n", result);
-						}
+						message.pop_back();
+						system("cls"); //supposedly this isn't a safe thing to do, but I'm pretty sure LG showed it in class
+						updateLog = true;
 					}
-					else if (command == "/message" || command == "/m" && loggedIn)
+				}
+				else if (key == 13)
+				{ // enter to send
+
+					helpRequested = false; //remove the help
+
+					if (message[0] == '/') // is a command
 					{
-						pos = message.find(" ");
-						std::string room = message.substr(0, pos);
+						size_t pos = message.find(" ");
+						std::string command = message.substr(0, pos);
 						message.erase(0, pos + 1);
 
-						if (std::count(rooms.begin(), rooms.end(), room) == 0)
+						if (command == "/help" || command == "/h")
 						{
-							chatlog.push_back("You currently aren't in the room " + room);
+							helpRequested = true;
+							updateLog;
 						}
-						else
+						else if (command == "/join" || command == "/j" && loggedIn)
 						{
-							//call to asseble the protocol
-							outgoing = ProtocolMethods::MakeProtocol(SEND_MESSAGE, username, room, message);
-							
-
-							//change it to a form we can transport
-							char* payload = outgoing.PayloadToString();
-							//send it
-							result = send(connectSocket, payload, outgoing.readUInt32BE(0), 0);
-
-							if (result == SOCKET_ERROR)
+							if (std::count(rooms.begin(), rooms.end(), message))
 							{
-								printf("send failed with error: %d\n", WSAGetLastError());
-								closesocket(connectSocket);
-								WSACleanup();
-								return 1;
+								chatlog.push_back("You are already in the room " + message);
 							}
+							else
+							{
+								//assemble the protocol
+								outgoing = ProtocolMethods::MakeProtocol(JOIN_ROOM, username, message, "");//this has no inherent message
+								sProtocolData data = ProtocolMethods::ParseBuffer(outgoing);
 
-							//clean up
-							delete[] payload;
-							printf("Bytes Sent: %ld\n", result);
-						}
-					}
-					else if (command == "/leave" || command == "/l" && loggedIn)
-					{
-						if (std::count(rooms.begin(), rooms.end(), message) == 0)
-						{
-							chatlog.push_back("You currently aren't in the room " + message);
-						}
-						else
-						{
-							//Leave
-							outgoing = ProtocolMethods::MakeProtocol(LEAVE_ROOM, username, message, "");
+								//change it to a format we can transport
+								char* payload = outgoing.PayloadToString();
+								//send it
+								result = send(connectSocket, payload, outgoing.readUInt32BE(0), 0);
+								if (result == SOCKET_ERROR)
+								{
+									printf("send failed with error: %d\n", WSAGetLastError());
+									closesocket(connectSocket);
+									WSACleanup();
+									return 1;
+								}
 
-							//change it to a format we can transport
+								rooms.push_back(message);
+
+								//clean up
+								delete[] payload;
+								printf("Bytes Sent: %ld\n", result);
+							}
+						}
+						else if (command == "/message" || command == "/m" && loggedIn)
+						{
+							pos = message.find(" ");
+							std::string room = message.substr(0, pos);
+							message.erase(0, pos + 1);
+
+							if (std::count(rooms.begin(), rooms.end(), room) == 0)
+							{
+								chatlog.push_back("You currently aren't in the room " + room);
+							}
+							else
+							{
+								//call to asseble the protocol
+								outgoing = ProtocolMethods::MakeProtocol(SEND_MESSAGE, username, room, message);
+
+
+								//change it to a form we can transport
+								char* payload = outgoing.PayloadToString();
+								//send it
+								result = send(connectSocket, payload, outgoing.readUInt32BE(0), 0);
+
+								if (result == SOCKET_ERROR)
+								{
+									printf("send failed with error: %d\n", WSAGetLastError());
+									closesocket(connectSocket);
+									WSACleanup();
+									return 1;
+								}
+
+								//clean up
+								delete[] payload;
+								printf("Bytes Sent: %ld\n", result);
+							}
+						}
+						else if (command == "/leave" || command == "/l" && loggedIn)
+						{
+							if (std::count(rooms.begin(), rooms.end(), message) == 0)
+							{
+								chatlog.push_back("You currently aren't in the room " + message);
+							}
+							else
+							{
+								//Leave
+								outgoing = ProtocolMethods::MakeProtocol(LEAVE_ROOM, username, message, "");
+
+								//change it to a format we can transport
+								char* leavePayload = outgoing.PayloadToString();
+								//send it
+								result = send(connectSocket, leavePayload, outgoing.readUInt32BE(0), 0);
+								if (result == SOCKET_ERROR)
+								{
+									printf("send failed with error: %d\n", WSAGetLastError());
+									closesocket(connectSocket);
+									WSACleanup();
+									return 1;
+								}
+
+								//clean up
+								delete[] leavePayload;
+								printf("Bytes Sent: %ld\n", result);
+								rooms.erase(std::find(rooms.begin(), rooms.end(), message));
+							}
+						}
+						else if (command == "/login" || command == "/log" && !loggedIn)
+						{
+							std::string name;
+							std::string password;
+
+							std::cout << "Username: ";
+							std::cin >> name;
+
+							std::wcout << "Password: ";
+							std::cin >> password;
+
+							outgoing = ProtocolMethods::MakeProtocol(LOGIN_USER, name, password, "");
 							char* leavePayload = outgoing.PayloadToString();
 							//send it
 							result = send(connectSocket, leavePayload, outgoing.readUInt32BE(0), 0);
@@ -276,81 +315,52 @@ int main(int argc, char **argv)
 
 							//clean up
 							delete[] leavePayload;
-							printf("Bytes Sent: %ld\n", result);
-							rooms.erase(std::find(rooms.begin(), rooms.end(), message));
+
+							system("cls");
+							loggingIn = true;
 						}
-					}
-					else if (command == "/login" || command == "/log" && !loggedIn)
-					{
-						std::string name;
-						std::string password;
-
-						std::cout << "Username: ";
-						std::cin >> name;
-
-						std::wcout << "Password: ";
-						std::cin >> password;
-
-						outgoing = ProtocolMethods::MakeProtocol(LOGIN_USER, name, password, "");
-						char* leavePayload = outgoing.PayloadToString();
-						//send it
-						result = send(connectSocket, leavePayload, outgoing.readUInt32BE(0), 0);
-						if (result == SOCKET_ERROR)
+						else if (command == "/registar" || command == "/reg" && !loggedIn)
 						{
-							printf("send failed with error: %d\n", WSAGetLastError());
-							closesocket(connectSocket);
-							WSACleanup();
-							return 1;
+							std::string name;
+							std::string password;
+
+							std::cout << "Username: ";
+							std::cin >> name;
+
+							std::wcout << "Password: ";
+							std::cin >> password;
+
+							outgoing = ProtocolMethods::MakeProtocol(REGISTER_USER, name, password, "");
+							char* leavePayload = outgoing.PayloadToString();
+							//send it
+							result = send(connectSocket, leavePayload, outgoing.readUInt32BE(0), 0);
+							if (result == SOCKET_ERROR)
+							{
+								printf("send failed with error: %d\n", WSAGetLastError());
+								closesocket(connectSocket);
+								WSACleanup();
+								return 1;
+							}
+
+							//clean up
+							delete[] leavePayload;
+							system("cls");
+							loggingIn = true;
 						}
-
-						//clean up
-						delete[] leavePayload;
-
-						//just for now, only do this when we actully get confirmation from the server about logging in
-						loggedIn = true;
 					}
-					else if (command == "/registar" || command == "/reg" && !loggedIn)
-					{
-						std::string name;
-						std::string password;
 
-						std::cout << "Username: ";
-						std::cin >> name;
-
-						std::wcout << "Password: ";
-						std::cin >> password;
-
-						outgoing = ProtocolMethods::MakeProtocol(REGISTER_USER, name, password, "");
-						char* leavePayload = outgoing.PayloadToString();
-						//send it
-						result = send(connectSocket, leavePayload, outgoing.readUInt32BE(0), 0);
-						if (result == SOCKET_ERROR)
-						{
-							printf("send failed with error: %d\n", WSAGetLastError());
-							closesocket(connectSocket);
-							WSACleanup();
-							return 1;
-						}
-
-						//clean up
-						delete[] leavePayload;
-
-						//just for now, only do this when we actully get confirmation from the server about logging in
-						loggedIn = true;
-					}
+					else { invalidCommand = true; }
+					message = "";
+					updateLog = true;
 				}
-				
-				else{ invalidCommand = true; }
-				message = "";
-				updateLog = true;
-			}
-			else {
-				message.push_back(key);
-				system("cls"); //supposedly this isn't a safe thing to do, but I'm pretty sure LG showed it in class
-				updateLog = true;				
+				else
+				{
+					message.push_back(key);
+					system("cls"); //supposedly this isn't a safe thing to do, but I'm pretty sure LG showed it in class
+					updateLog = true;
+				}
 			}
 		}
-
 		if (isConnected) {
 			result = recv(connectSocket, recvbuf, recvbuflen, 0);
 			if (result > 0)
@@ -380,6 +390,8 @@ int main(int argc, char **argv)
 				else if (data.type == G_CREATE_ACCOUNT_SUCCESS)
 				{
 					std::cout << "Account created" << std::endl;
+					loggedIn = true;
+					loggingIn = false;
 				}
 				else if (data.type == G_CREATE_ACCOUNT_FAILURE)
 				{
@@ -393,6 +405,8 @@ int main(int argc, char **argv)
 				else if (data.type == G_AUTHENTICATE_SUCCESS)
 				{
 					std::cout << "Logged in" << std::endl;
+					loggedIn = true;
+					loggingIn = false;
 				}
 				else if (data.type == G_AUTHENTICATE_FAILURE)
 				{
