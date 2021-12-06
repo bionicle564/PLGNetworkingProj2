@@ -642,7 +642,7 @@ int main(int argc, char** argv)
 			}
 			else if (data.type == G_AUTHENTICATE_SUCCESS)
 			{
-				tutorial::CreateAccountWebSuccess authenticateSuccess;
+				tutorial::AuthenticateWebSuccess authenticateSuccess;
 
 				if (!authenticateSuccess.ParseFromString(data.message))
 				{
@@ -650,7 +650,7 @@ int main(int argc, char** argv)
 				}
 				else
 				{
-					outgoing = ProtocolMethods::MakeProtocol(G_AUTHENTICATE_SUCCESS, "", "", data.message);
+					outgoing = ProtocolMethods::MakeProtocol(G_AUTHENTICATE_SUCCESS, "", "", authenticateSuccess.creationdate());
 
 					char* payload = outgoing.PayloadToString();
 					WSABUF buf;
@@ -673,7 +673,7 @@ int main(int argc, char** argv)
 			}
 			else if (data.type == G_AUTHENTICATE_FAILURE)
 			{
-				tutorial::CreateAccountWebFailure authenticateFailure;
+				tutorial::AuthenticateWebFailure authenticateFailure;
 
 				if (!authenticateFailure.ParseFromString(data.message))
 				{

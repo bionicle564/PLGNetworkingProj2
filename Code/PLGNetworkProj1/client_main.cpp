@@ -224,7 +224,7 @@ int main(int argc, char **argv)
 
 								//clean up
 								delete[] payload;
-								printf("Bytes Sent: %ld\n", result);
+								//printf("Bytes Sent: %ld\n", result);
 							}
 						}
 						else if (command == "/message" || command == "/m" && loggedIn)
@@ -258,7 +258,7 @@ int main(int argc, char **argv)
 
 								//clean up
 								delete[] payload;
-								printf("Bytes Sent: %ld\n", result);
+								//printf("Bytes Sent: %ld\n", result);
 							}
 						}
 						else if (command == "/leave" || command == "/l" && loggedIn)
@@ -286,7 +286,7 @@ int main(int argc, char **argv)
 
 								//clean up
 								delete[] leavePayload;
-								printf("Bytes Sent: %ld\n", result);
+								//printf("Bytes Sent: %ld\n", result);
 								rooms.erase(std::find(rooms.begin(), rooms.end(), message));
 							}
 						}
@@ -297,6 +297,7 @@ int main(int argc, char **argv)
 
 							std::cout << "Username: ";
 							std::cin >> name;
+							username = name;
 
 							std::wcout << "Password: ";
 							std::cin >> password;
@@ -319,13 +320,14 @@ int main(int argc, char **argv)
 							system("cls");
 							loggingIn = true;
 						}
-						else if (command == "/registar" || command == "/reg" && !loggedIn)
+						else if (command == "/register" || command == "/reg" && !loggedIn)
 						{
 							std::string name;
 							std::string password;
 
 							std::cout << "Username: ";
 							std::cin >> name;
+							username = name;
 
 							std::wcout << "Password: ";
 							std::cin >> password;
@@ -361,13 +363,13 @@ int main(int argc, char **argv)
 				}
 			}
 		}
+
 		if (isConnected) {
 			result = recv(connectSocket, recvbuf, recvbuflen, 0);
 			if (result > 0)
-			{
-				
+			{				
 				//get the inbound message, and put it in the buffer
-				printf("Bytes received: %d\n", result);
+				//printf("Bytes received: %d\n", result);
 				std::string received = "";
 				for (int i = 0; i < recvbuflen; i++) {
 					received.push_back(recvbuf[i]);
@@ -404,7 +406,7 @@ int main(int argc, char **argv)
 				}
 				else if (data.type == G_AUTHENTICATE_SUCCESS)
 				{
-					std::cout << "Logged in" << std::endl;
+					std::cout << "Logged in successfuly! Last login on: " << data.message << std::endl;
 					loggedIn = true;
 					loggingIn = false;
 				}
@@ -509,7 +511,7 @@ int main(int argc, char **argv)
 
 		//clean up
 		delete[] leavePayload;
-		printf("Bytes Sent: %ld\n", result);
+		//printf("Bytes Sent: %ld\n", result);
 	}
 
 	// Step #5 shutdown the connection since no more data will be sent
