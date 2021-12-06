@@ -63,11 +63,11 @@ DatabaseResponse DBHelper::CreateAccount(const string& email, const string& pass
 	//This is for adding the user
 	//YYYY-MM-DD hh:mm:ss <-Format for Timestamp and DateTime	
 	
-	std::string nowAsDateTime = GetTimeInDateTimeFormat();
-	reponse.date = nowAsDateTime;
+	//std::string nowAsDateTime = GetTimeInDateTimeFormat();
+	//reponse.date = nowAsDateTime;
 
 	try {
-		createUser->setString(1, nowAsDateTime);
+		//createUser->setString(1, nowAsDateTime);
 		int result = createUser->executeUpdate();
 	}
 	catch (SQLException e)
@@ -185,13 +185,13 @@ DatabaseResponse DBHelper::LoginUser(const string& email, const string& password
 		return reponse;
 	}
 
-	std::string nowAsDateTime = GetTimeInDateTimeFormat();
-	reponse.date = nowAsDateTime;
+	//std::string nowAsDateTime = GetTimeInDateTimeFormat();
+	//reponse.date = nowAsDateTime;
 
 	//update the login time
 	try {
-		updateLoginTime->setString(1, nowAsDateTime);
-		updateLoginTime->setInt(2, m_ResultSet->getInt(1));
+		//updateLoginTime->setString(1, nowAsDateTime);
+		updateLoginTime->setInt(1, m_ResultSet->getInt(1));
 		int result = updateLoginTime->executeUpdate();
 	}catch (SQLException e)
 	{
@@ -213,13 +213,13 @@ void DBHelper::GeneratePreparedStatements(void)
 	//	"INSERT INTO web_auth(email, hashed_password, salt, userId) VALUES (?, ?, ?, ?);");
 
 	createUser = m_Connection->prepareStatement(
-		"INSERT INTO users (creation_time) VALUES (?);"
+		"INSERT INTO users (creation_time) VALUES (NOW());"
 	);
 	createAuth = m_Connection->prepareStatement(
 		"INSERT INTO web_auth (email, salt, hash_password, user_id) VALUES(? , ? , ? , ?); "
 	);
 	updateLoginTime = m_Connection->prepareStatement(
-		"UPDATE users SET last_login = ? WHERE id = ?;"
+		"UPDATE users SET last_login = CURTIME() WHERE id = ?;"
 	);
 }
 
