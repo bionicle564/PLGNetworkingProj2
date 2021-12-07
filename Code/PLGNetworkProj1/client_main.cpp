@@ -405,6 +405,7 @@ int main(int argc, char **argv)
 						chatlog.push_back("<Authentication>: Internal server error");//std::cout << "Internal server error" << std::endl;
 
 					updateLog = true;
+					loggingIn = false;
 				}
 				else if (data.type == G_AUTHENTICATE_SUCCESS)
 				{
