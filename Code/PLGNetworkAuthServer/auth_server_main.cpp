@@ -357,7 +357,7 @@ int main(int argc, char** argv)
 								std::string successString;
 								successResponse.SerializeToString(&successString);
 
-								outgoing = ProtocolMethods::MakeProtocol(G_AUTHENTICATE_SUCCESS, "", "", successString);
+								outgoing = ProtocolMethods::MakeProtocol(G_AUTHENTICATE_SUCCESS, email, "", successString);
 							}
 							else
 							{

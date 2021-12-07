@@ -391,35 +391,47 @@ int main(int argc, char **argv)
 				}
 				else if (data.type == G_CREATE_ACCOUNT_SUCCESS)
 				{
-					std::cout << "Account created" << std::endl;
+					chatlog.push_back("<Authentication>: Account created!");//std::cout << "Account created!" << std::endl;
 					loggedIn = true;
 					loggingIn = false;
 				}
 				else if (data.type == G_CREATE_ACCOUNT_FAILURE)
 				{
-					std::cout << "Account creating failed: ";
+					//std::cout << "Account creating failed: ";
 
 					if (data.message == "ACCOUNT_ALREADY_EXISTS")
-						std::cout << "Account already exists" << std::endl;
+						chatlog.push_back("<Authentication>: Account already exists");//std::cout << "Account already exists" << std::endl;
 					else if (data.message == "INTERNAL_SERVER_ERROR")
-						std::cout << "Internal server error" << std::endl;
+						chatlog.push_back("<Authentication>: Internal server error");//std::cout << "Internal server error" << std::endl;
+
+					updateLog = true;
 				}
 				else if (data.type == G_AUTHENTICATE_SUCCESS)
 				{
-					std::cout << "Logged in successfuly! Last login on: " << data.message << std::endl;
-					loggedIn = true;
-					loggingIn = false;
+					if (data.userName == username)
+					{
+						loggedIn = true;
+						chatlog.push_back("<Authentication>: Logged in successfuly!");
+						updateLog = true;
+						loggingIn = false;
+					}
+					//std::cout << "Logged in successfuly!" << std::endl;
+					//loggedIn = true;
+					//loggingIn = false;
 				}
 				else if (data.type == G_AUTHENTICATE_FAILURE)
 				{
-					std::cout << "Logging in failed: ";
+					//std::cout << "Logging in failed: ";
 
 					if (data.message == "INVALID_CREDENTIALS")
-						std::cout << "User doesnt exist" << std::endl;
+						chatlog.push_back("<Authentication>: User doesnt exist"); //std::cout << "User doesnt exist" << std::endl;
 					else if (data.message == "INVALID_PASSWORD")
-						std::cout << "Password incorect" << std::endl;
+						chatlog.push_back("<Authentication>: Password incorect");//std::cout << "Password incorect" << std::endl;
 					else if (data.message == "INTERNAL_SERVER_ERROR")
-						std::cout << "Internal server error" << std::endl;
+						chatlog.push_back("<Authentication>: Internal server error");//std::cout << "Internal server error" << std::endl;
+
+					updateLog = true;
+					loggingIn = false;
 				}
 				else
 				{

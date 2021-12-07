@@ -650,7 +650,7 @@ int main(int argc, char** argv)
 				}
 				else
 				{
-					outgoing = ProtocolMethods::MakeProtocol(G_AUTHENTICATE_SUCCESS, "", "", authenticateSuccess.creationdate());
+					outgoing = ProtocolMethods::MakeProtocol(G_AUTHENTICATE_SUCCESS, data.userName, "", authenticateSuccess.creationdate());
 
 					char* payload = outgoing.PayloadToString();
 					WSABUF buf;

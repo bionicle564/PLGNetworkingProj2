@@ -113,6 +113,22 @@ Buffer ProtocolMethods::MakeProtocol(ProtocolType type, std::string name, std::s
 
 		tempBuf.writeUInt32BE(4, REGISTER_USER);
 	}
+	else if (type == G_AUTHENTICATE_SUCCESS)
+	{
+		tempBuf.writeUInt32BE(name.length());
+		tempBuf.writeUInt8BE(name);
+
+		tempBuf.writeUInt32BE(room.length());
+		tempBuf.writeUInt8BE(room);
+
+		tempBuf.writeUInt32BE(message.length());
+		tempBuf.writeUInt8BE(message);
+
+		int length = tempBuf.GetWriteIndex() + 8;
+		tempBuf.writeUInt32BE(0, length);
+
+		tempBuf.writeUInt32BE(4, G_AUTHENTICATE_SUCCESS);
+	}
 	else
 	{
 		tempBuf.writeUInt32BE(message.length());
@@ -188,6 +204,15 @@ sProtocolData ProtocolMethods::ParseBuffer(Buffer input)
 		data.message = input.readUInt8BE(msgLength);
 	}
 	else if (data.type == REGISTER_USER)
+	{
+		uint32_t nameLength = input.readUInt32BE();
+		data.userName = input.readUInt8BE(nameLength);
+		uint32_t roomLength = input.readUInt32BE();
+		data.room = input.readUInt8BE(roomLength);
+		uint32_t msgLength = input.readUInt32BE();
+		data.message = input.readUInt8BE(msgLength);
+	}
+	else if (data.type == G_AUTHENTICATE_SUCCESS)
 	{
 		uint32_t nameLength = input.readUInt32BE();
 		data.userName = input.readUInt8BE(nameLength);

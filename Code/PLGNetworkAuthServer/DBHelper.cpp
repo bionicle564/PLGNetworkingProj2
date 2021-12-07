@@ -207,7 +207,7 @@ DatabaseResponse DBHelper::LoginUser(const string& email, const string& password
 	try {
 		//updateLoginTime->setString(1, nowAsDateTime);
 		getDataBaseTime->setInt(1, userID);
-		int result = getDataBaseTime->execute();
+		m_ResultSet = getDataBaseTime->executeQuery();
 	}
 	catch (SQLException e)
 	{
@@ -217,7 +217,7 @@ DatabaseResponse DBHelper::LoginUser(const string& email, const string& password
 	}
 
 	//this should be it?
-	reponse.date = m_ResultSet->getString(1);
+	//reponse.date = m_ResultSet->getString(3);
 	reponse.result = DatabaseReturnCode::SUCCESS;
 
 
@@ -243,7 +243,7 @@ void DBHelper::GeneratePreparedStatements(void)
 	);
 
 	getDataBaseTime = m_Connection->prepareStatement(
-		"SELECT creation_time FROM users WHERE id = ?;"
+		"SELECT * FROM users WHERE id = ?;"
 	);
 }
 
