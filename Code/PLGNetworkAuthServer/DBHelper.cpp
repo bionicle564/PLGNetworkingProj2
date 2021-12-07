@@ -12,6 +12,7 @@ sql::PreparedStatement* g_GetEmails;
 sql::PreparedStatement* createUser;
 sql::PreparedStatement* createAuth;
 sql::PreparedStatement* updateLoginTime;
+sql::PreparedStatement* getDataBaseTime;
 
 DBHelper::DBHelper(void)
 	: m_IsConnected(false)
@@ -27,6 +28,7 @@ DBHelper::~DBHelper() {
 	delete createUser;
 	delete createAuth;
 	delete updateLoginTime;
+	delete getDataBaseTime;
 	delete m_Driver;
 	delete m_Connection;
 	delete m_ResultSet;
@@ -188,10 +190,12 @@ DatabaseResponse DBHelper::LoginUser(const string& email, const string& password
 	//std::string nowAsDateTime = GetTimeInDateTimeFormat();
 	//reponse.date = nowAsDateTime;
 
+	int userID = m_ResultSet->getInt(1);
+
 	//update the login time
 	try {
 		//updateLoginTime->setString(1, nowAsDateTime);
-		updateLoginTime->setInt(1, m_ResultSet->getInt(1));
+		updateLoginTime->setInt(1, userID);
 		int result = updateLoginTime->executeUpdate();
 	}catch (SQLException e)
 	{
@@ -200,7 +204,23 @@ DatabaseResponse DBHelper::LoginUser(const string& email, const string& password
 		return reponse;
 	}
 
+	try {
+		//updateLoginTime->setString(1, nowAsDateTime);
+		getDataBaseTime->setInt(1, userID);
+		int result = getDataBaseTime->execute();
+	}
+	catch (SQLException e)
+	{
+		printf("Failed to update login data!\n");
+		reponse.result = DatabaseReturnCode::INTERNAL_SERVER_ERROR;
+		return reponse;
+	}
+
+	//this should be it?
+	reponse.date = m_ResultSet->getString(1);
 	reponse.result = DatabaseReturnCode::SUCCESS;
+
+
 	return reponse;
 }
 
@@ -220,6 +240,10 @@ void DBHelper::GeneratePreparedStatements(void)
 	);
 	updateLoginTime = m_Connection->prepareStatement(
 		"UPDATE users SET last_login = CURTIME() WHERE id = ?;"
+	);
+
+	getDataBaseTime = m_Connection->prepareStatement(
+		"SELECT creation_time FROM users WHERE id = ?;"
 	);
 }
 
